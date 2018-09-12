@@ -1,0 +1,12 @@
+\#
+.#recentf
+.emacs.desktop
+.emacs.desktop.lock
+auto-save-list/
+bookmarks
+elpa/
+layouts/
+projectile-bookmarks.eld
+recentf
+var/
+private.el
