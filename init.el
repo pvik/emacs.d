@@ -98,6 +98,20 @@
 ;; =======================================================
 ;; =======================================================
 
+;; Projectile
+(use-package projectile
+  :ensure t
+  :init
+  (setq projectile-require-project-root nil)
+  (setq projectile-completion-system 'helm)
+  :config
+	(setq projectile-mode-line
+				'(:eval (format " %s " (projectile-project-name))))
+  (projectile-mode 1))
+
+;; =======================================================
+;; =======================================================
+
 ;; User Interface
 ;; ==============
 
@@ -121,26 +135,84 @@
 ;; modeline
 ;; ========
 
+(column-number-mode 1)
+
+(custom-set-faces
+ '(mode-line
+	 ((t (:foreground "#5699AF" :background "#21242b" :height 80)))))
+
+(custom-set-faces
+ '(mode-line-inactive
+	 ((t (:foreground "#282c34" :background "#282c34" :height 80)))))
+
+(custom-set-faces
+ '(mode-line-buffer-id
+	 ((t (:foreground "#282c34" :background "#51afef" :height 85)))))
+
+(defface mode-line-text
+  '((t :foreground "#bbc2cf" :background "#2257A0" :height 75))
+  "Face used for buffer identification parts of the mode line."
+  :group 'mode-line-faces
+  :group 'basic-faces)
+
+(defvar mode-line-project
+  '(:propertize
+    projectile-mode-line
+    face mode-line-text))
+(put 'mode-line-project 'risky-local-variable t)
+
+(setq-default mode-line-buffer-identification
+							(propertized-buffer-identification " %b "))
+
+(setq-default mode-line-format
+      '("%e"
+        mode-line-client
+        mode-line-modified
+				" "
+        ;; mode-line-remote -- no need to indicate this specially
+        ;; mode-line-frame-identification -- this is for text-mode emacs only
+        mode-line-buffer-identification
+        mode-line-project
+        (vc-mode vc-mode)
+				" • "
+        (flycheck-mode flycheck-mode-line)
+        " • "
+        mode-name
+				" • "
+        mode-line-misc-info
+        mode-line-end-spaces
+				" • "
+        mode-line-position))
+
 ;; spaceline
-(use-package spaceline
-  :ensure t)
-(use-package spaceline-all-the-icons
-  :after (spaceline all-the-icons)
-  :ensure t
-  :custom-face
-  (spaceline-highlight-face ((t (:foreground "#2d2d2a" :background "#51afef")))) ;; "#498ad1"
-  :config
-  (spaceline-toggle-all-the-icons-git-status-on)
-  (spaceline-toggle-all-the-icons-dedicated-on)
-  (spaceline-toggle-all-the-icons-vc-icon-on)
-  (spaceline-toggle-all-the-icons-vc-status-on)
-  (setq spaceline-all-the-icons-flycheck-alternate t)
-  (setq spaceline-all-the-icons-clock-always-visible nil)
-  (setq spaceline-all-the-icons-icon-set-flycheck-slim 'outline)
-  (setq spaceline-all-the-icons-primary-separator "·")
-  (setq spaceline-all-the-icons-secondary-separator "⁝")
-  (setq spaceline-all-the-icons-separator-type (quote none))
-  (spaceline-all-the-icons-theme))
+;; (use-package spaceline
+;;   :ensure t
+;; 	:config
+;; 	(require 'spaceline-config)
+;; 	(spaceline-emacs-theme)
+;; 	(spaceline-helm-mode)
+;; 	(setq spaceline-minor-modes-p nil)
+;; 	(spaceline-toggle-projectile-root-on)
+;; 	(spaceline-toggle-workspace-number-on)
+;; 	(spaceline-toggle-evil-state-off)
+;; 	(spaceline-toggle-anzu-off)
+;; 	(spaceline-toggle-hud-off)
+	
+;; 	(custom-set-faces
+;; 	 '(spaceline-highlight-face
+;; 		 ((t (:foreground "#1c1f24" :background "#51afef" :height 55)))))
+	
+;; 	(set-face-background 'powerline-active1 "#51afef")
+;;   (set-face-foreground 'powerline-active1 "#1c1f24")
+	
+;; 	(set-face-attribute 'mode-line nil :height 55)
+;; 	(set-face-attribute 'powerline-active1 nil :height 55)
+;; 	(set-face-attribute 'powerline-active2 nil :height 55)
+;; 	;; inactive
+;; 	(set-face-attribute 'mode-line-inactive nil :height 55)
+;; 	(set-face-attribute 'powerline-inactive1 nil :height 55)
+;; 	(set-face-attribute 'powerline-inactive2 nil :height 55))
+
 
 ;; Theme
 (use-package doom-themes
@@ -305,15 +377,6 @@
   (add-hook 'helm-minibuffer-set-up-hook 'elric//helm-hide-minibuffer-maybe)
   (helm-autoresize-mode 1)
   (helm-mode 1))
-
-;; Projectile
-(use-package projectile
-  :ensure t
-  :init
-  (setq projectile-require-project-root nil)
-  (setq projectile-completion-system 'helm)
-  :config
-  (projectile-mode 1))
 
 ;; helm-projectile
 (use-package helm-projectile
@@ -648,6 +711,7 @@
  '(default ((t (:inherit nil :stipple nil :background "#282c34" :foreground "#bbc2cf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 82 :width normal :foundry "ADBO" :family "Hack"))))
  '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
  '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black"))))
- '(spaceline-highlight-face ((t (:foreground "#2d2d2a" :background "#51afef")))))
+ ;;'(spaceline-highlight-face ((t (:foreground "#2d2d2a" :background "#51afef"))))
+ )
 
 ;;; init.el ends here
