@@ -40,7 +40,7 @@
  initial-scratch-message ";; Happy Hacking!!"
  left-margin-width 1 right-margin-width 1     ; Add left and right margins
  select-enable-clipboard t       ; Merge system's and Emacs' clipboard
- cursor-type '(bar . 5)          ; set cursor type to bar
+ cursor-type '(bar . 2)          ; set cursor type to bar
  line-spacing 4)                 ; line spacing
 
 (delete-selection-mode 1)        ; Replace region when inserting text
