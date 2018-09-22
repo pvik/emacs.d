@@ -139,7 +139,7 @@
 
 (custom-set-faces
  '(mode-line
-	 ((t (:foreground "#5699AF" :background "#21242b" :height 80)))))
+	 ((t (:foreground "#21242b" :background "#5699AF" :height 80)))))
 
 (custom-set-faces
  '(mode-line-inactive

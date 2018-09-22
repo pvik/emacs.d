@@ -99,7 +99,9 @@
   (add-hook 'cider-mode-hook 'eldoc-mode)
   :config
   (setq nrepl-hide-special-buffers t)
-  (setq nrepl-log-messages t))
+  (setq nrepl-log-messages t)
+	(setq cider-repl-use-pretty-printing t)
+	(setq nrepl-repl-buffer-name-template "*cider-repl (%r%S)"))
 (use-package helm-cider
   :ensure t
   :after cider)
