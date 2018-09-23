@@ -18,7 +18,8 @@
 ;; remove - shackle & configure purpose
 ;; setup hydra
 
-;(load "~/.emacs.d/doom-core-slim")
+;; (load "~/.emacs.d/doom-core-slim")
+(setq load-prefer-newer t) ;; load newer source instead of old bytecode
 (add-to-list 'load-path "~/.emacs.d/modules/")
 (require 'doom-core-slim)
 (require 'private)
