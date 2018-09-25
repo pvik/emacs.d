@@ -107,8 +107,11 @@
   (setq projectile-completion-system 'helm)
   :config
 	(setq projectile-mode-line
-				'(:eval (format " %s " (projectile-project-name))))
-  (projectile-mode 1))
+      '(:eval (if (projectile-project-p)
+                  (format "[%s]"
+                          (projectile-project-name))
+                "")))
+	(projectile-mode 1))
 
 ;; =======================================================
 ;; =======================================================
