@@ -250,8 +250,8 @@
     (set-face-attribute 'mode-line-inactive nil :underline  line)
     (set-face-attribute 'mode-line          nil :box        nil)
     (set-face-attribute 'mode-line-inactive nil :box        nil)
-		(set-face-attribute 'mode-line          nil :height     82)
-		(set-face-attribute 'mode-line-inactive nil :height     76)
+		(set-face-attribute 'mode-line          nil :height     pvik-modeline-active-font-height) ;; defined in private.el
+		(set-face-attribute 'mode-line-inactive nil :height     pvik-modeline-inactive-font-height)
 		(set-face-attribute 'mode-line          nil :foreground "#bbc2cf")
 		(set-face-attribute 'mode-line          nil :background "#2257A0")
     (set-face-attribute 'mode-line-inactive nil :background "#21242b")))
@@ -259,20 +259,6 @@
 (use-package moody
   :ensure t
 	:preface
-	;; (setq-default mode-line-format
-	;; 							'("%e"
-	;; 								mode-line-client
-	;; 								mode-line-modified
-  ;;                 mode-line-buffer-identification
-	;; 								mode-line-project
-	;; 								(vc-mode vc-mode)
-  ;;                 (flycheck-mode flycheck-mode-line)
-  ;;                 ""
-	;; 								mode-name
-	;; 								mode-line-misc-info
-	;; 								mode-line-end-spaces
-  ;;                 mode-line-position))
-
 	(defvar pv-mode-line-mode
 		'(:eval (moody-tab
 						 (format-mode-line
@@ -303,7 +289,7 @@
 													 reverse))
 	:config
   (setq x-underline-at-descent-line t)
-	(setq moody-mode-line-height 48)
+	(setq moody-mode-line-height pvik-modeline-height) ;; defined in private.el
   (pv-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
 
