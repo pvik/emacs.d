@@ -106,12 +106,7 @@
   (setq projectile-require-project-root nil)
   (setq projectile-completion-system 'helm)
   :config
-	(setq projectile-mode-line
-      '(:eval (if (projectile-project-p)
-                  (format "[%s]"
-                          (projectile-project-name))
-                "")))
-	(projectile-mode 1))
+  (projectile-mode 1))
 
 ;; =======================================================
 ;; =======================================================
@@ -136,91 +131,11 @@
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
   (global-set-key [f6] 'neotree-toggle))
 
-;; modeline
+;; theme & modeline
 ;; ========
 
 (column-number-mode 1)
 
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(default ((t (:inherit nil :stipple nil :background "#282c34" :foreground "#bbc2cf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 82 :width normal :foundry "ADBO" :family "Hack"))))
-;;  '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
-;;  '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black"))))
-;;  '(mode-line ((t (:foreground "#21242b" :background "#5699AF" :height 80))))
-;;  '(mode-line-buffer-id ((t (:foreground "#282c34" :background "#51afef" :height 85))))
-;;  '(mode-line-inactive ((t (:foreground "#282c34" :background "#282c34" :height 80)))))
-
-;; (defface mode-line-text
-;;   '((t :foreground "#bbc2cf" :background "#2257A0" :height 75))
-;;   "Face used for buffer identification parts of the mode line."
-;;   :group 'mode-line-faces
-;;   :group 'basic-faces)
-
-;; (defvar mode-line-project
-;;   '(:propertize
-;;     projectile-mode-line
-;;     face mode-line-text))
-;; (put 'mode-line-project 'risky-local-variable t)
-
-;; (setq-default mode-line-buffer-identification
-;; 							(propertized-buffer-identification " %b "))
-
-;; (setq-default mode-line-format
-;;       '("%e"
-;;         mode-line-client
-;;         mode-line-modified
-;; 				" "
-;;         ;; mode-line-remote -- no need to indicate this specially
-;;         ;; mode-line-frame-identification -- this is for text-mode emacs only
-;;         mode-line-buffer-identification
-;;         mode-line-project
-;;         (vc-mode vc-mode)
-;; 				" • "
-;;         (flycheck-mode flycheck-mode-line)
-;;         " • "
-;;         mode-name
-;; 				" • "
-;;         mode-line-misc-info
-;;         mode-line-end-spaces
-;; 				" • "
-;;         mode-line-position))
-
-;; ==============================
-
-;; spaceline
-;; (use-package spaceline
-;;   :ensure t
-;; 	:config
-;; 	(require 'spaceline-config)
-;; 	(spaceline-emacs-theme)
-;; 	(spaceline-helm-mode)
-;; 	(setq spaceline-minor-modes-p nil)
-;; 	(spaceline-toggle-projectile-root-on)
-;; 	(spaceline-toggle-workspace-number-on)
-;; 	(spaceline-toggle-evil-state-off)
-;; 	(spaceline-toggle-anzu-off)
-;; 	(spaceline-toggle-hud-off)
-	
-;; 	(custom-set-faces
-;; 	 '(spaceline-highlight-face
-;; 		 ((t (:foreground "#1c1f24" :background "#51afef" :height 55)))))
-	
-;; 	(set-face-background 'powerline-active1 "#51afef")
-;;   (set-face-foreground 'powerline-active1 "#1c1f24")
-	
-;; 	(set-face-attribute 'mode-line nil :height 55)
-;; 	(set-face-attribute 'powerline-active1 nil :height 55)
-;; 	(set-face-attribute 'powerline-active2 nil :height 55)
-;; 	;; inactive
-;; 	(set-face-attribute 'mode-line-inactive nil :height 55)
-;; 	(set-face-attribute 'powerline-inactive1 nil :height 55)
-;; 	(set-face-attribute 'powerline-inactive2 nil :height 55))
-
-
-;; Theme
 (use-package doom-themes
   :ensure t
   :preface
@@ -760,10 +675,4 @@
 
 
 ;;; init.el ends here
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
- '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black")))))
+
