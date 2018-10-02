@@ -69,6 +69,16 @@
   :config
   (smartparens-global-mode t))
 
+;; geiser -> chicken scheme
+(use-package geiser
+  :ensure t)
+(use-package ac-geiser
+  :ensure t)
+(add-hook 'scheme-mode-hook 'turn-on-smartparens-strict-mode)
+(add-hook 'scheme-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'scheme-mode-hook #'show-paren-mode)
+(add-hook 'scheme-mode-hook #'outline-minor-mode)
+
 ;; (use-package paredit
 ;;   :ensure t
 ;;   :config
@@ -162,6 +172,12 @@
   :ensure t
 	:config
 	(add-hook 'rust-mode-hook 'cargo-minor-mode))
+
+;; nim mode
+(use-package nim-mode
+  :ensure t
+	:config
+	(add-hook 'nim-mode-hook 'nimsuggest-mode))
 
 
 ;;  tech modes

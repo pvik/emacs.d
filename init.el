@@ -141,52 +141,54 @@
 
 (column-number-mode 1)
 
-(custom-set-faces
- '(mode-line
-	 ((t (:foreground "#21242b" :background "#5699AF" :height 80)))))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(default ((t (:inherit nil :stipple nil :background "#282c34" :foreground "#bbc2cf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 82 :width normal :foundry "ADBO" :family "Hack"))))
+;;  '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
+;;  '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black"))))
+;;  '(mode-line ((t (:foreground "#21242b" :background "#5699AF" :height 80))))
+;;  '(mode-line-buffer-id ((t (:foreground "#282c34" :background "#51afef" :height 85))))
+;;  '(mode-line-inactive ((t (:foreground "#282c34" :background "#282c34" :height 80)))))
 
-(custom-set-faces
- '(mode-line-inactive
-	 ((t (:foreground "#282c34" :background "#282c34" :height 80)))))
+;; (defface mode-line-text
+;;   '((t :foreground "#bbc2cf" :background "#2257A0" :height 75))
+;;   "Face used for buffer identification parts of the mode line."
+;;   :group 'mode-line-faces
+;;   :group 'basic-faces)
 
-(custom-set-faces
- '(mode-line-buffer-id
-	 ((t (:foreground "#282c34" :background "#51afef" :height 85)))))
+;; (defvar mode-line-project
+;;   '(:propertize
+;;     projectile-mode-line
+;;     face mode-line-text))
+;; (put 'mode-line-project 'risky-local-variable t)
 
-(defface mode-line-text
-  '((t :foreground "#bbc2cf" :background "#2257A0" :height 75))
-  "Face used for buffer identification parts of the mode line."
-  :group 'mode-line-faces
-  :group 'basic-faces)
+;; (setq-default mode-line-buffer-identification
+;; 							(propertized-buffer-identification " %b "))
 
-(defvar mode-line-project
-  '(:propertize
-    projectile-mode-line
-    face mode-line-text))
-(put 'mode-line-project 'risky-local-variable t)
+;; (setq-default mode-line-format
+;;       '("%e"
+;;         mode-line-client
+;;         mode-line-modified
+;; 				" "
+;;         ;; mode-line-remote -- no need to indicate this specially
+;;         ;; mode-line-frame-identification -- this is for text-mode emacs only
+;;         mode-line-buffer-identification
+;;         mode-line-project
+;;         (vc-mode vc-mode)
+;; 				" • "
+;;         (flycheck-mode flycheck-mode-line)
+;;         " • "
+;;         mode-name
+;; 				" • "
+;;         mode-line-misc-info
+;;         mode-line-end-spaces
+;; 				" • "
+;;         mode-line-position))
 
-(setq-default mode-line-buffer-identification
-							(propertized-buffer-identification " %b "))
-
-(setq-default mode-line-format
-      '("%e"
-        mode-line-client
-        mode-line-modified
-				" "
-        ;; mode-line-remote -- no need to indicate this specially
-        ;; mode-line-frame-identification -- this is for text-mode emacs only
-        mode-line-buffer-identification
-        mode-line-project
-        (vc-mode vc-mode)
-				" • "
-        (flycheck-mode flycheck-mode-line)
-        " • "
-        mode-name
-				" • "
-        mode-line-misc-info
-        mode-line-end-spaces
-				" • "
-        mode-line-position))
+;; ==============================
 
 ;; spaceline
 ;; (use-package spaceline
@@ -223,25 +225,87 @@
   :ensure t
   :preface
   (defun my-init-theme (&optional _frame)
-	(load-theme 'doom-one t)
-	(doom-themes-visual-bell-config)
-	(doom-themes-neotree-config)
-	(doom-themes-org-config))
+		(load-theme 'doom-one t)
+		(doom-themes-visual-bell-config)
+		(doom-themes-neotree-config)
+		(doom-themes-org-config))
   
   (defun my-reload-theme-in-daemon (frame)
-	(when (or (daemonp) (not (display-graphic-p)))
+		(when (or (daemonp) (not (display-graphic-p)))
       (with-selected-frame frame
-		(run-with-timer 0.1 nil #'my-init-theme))))
+				(run-with-timer 0.1 nil #'my-init-theme))))
   :init
   (setq doom-themes-enable-bold t  ; if nil, bold is universally disabled
-		doom-themes-enable-italic t) ; if nil, italics is universally disabled
+				doom-themes-enable-italic t) ; if nil, italics is universally disabled
   :config
   (add-hook 'after-make-frame-functions #'my-init-theme)
   (add-hook 'after-make-frame-functions #'my-reload-theme-in-daemon)
-
+	
   ;; for GUI sessions
-  (my-init-theme))
+  (my-init-theme)
+	
+	(let ((line (face-attribute 'mode-line :underline)))
+    (set-face-attribute 'mode-line          nil :overline   line)
+		(set-face-attribute 'mode-line-inactive nil :overline   line)
+    (set-face-attribute 'mode-line-inactive nil :underline  line)
+    (set-face-attribute 'mode-line          nil :box        nil)
+    (set-face-attribute 'mode-line-inactive nil :box        nil)
+		(set-face-attribute 'mode-line          nil :height     82)
+		(set-face-attribute 'mode-line-inactive nil :height     76)
+		(set-face-attribute 'mode-line          nil :foreground "#bbc2cf")
+		(set-face-attribute 'mode-line          nil :background "#2257A0")
+    (set-face-attribute 'mode-line-inactive nil :background "#21242b")))
 
+(use-package moody
+  :ensure t
+	:preface
+	;; (setq-default mode-line-format
+	;; 							'("%e"
+	;; 								mode-line-client
+	;; 								mode-line-modified
+  ;;                 mode-line-buffer-identification
+	;; 								mode-line-project
+	;; 								(vc-mode vc-mode)
+  ;;                 (flycheck-mode flycheck-mode-line)
+  ;;                 ""
+	;; 								mode-name
+	;; 								mode-line-misc-info
+	;; 								mode-line-end-spaces
+  ;;                 mode-line-position))
+
+	(defvar pv-mode-line-mode
+		'(:eval (moody-tab
+						 (format-mode-line
+							(format "%s" mode-name))
+						 nil 'up)))
+	(put 'pv-mode-line-mode 'risky-local-variable t)
+	(make-variable-buffer-local 'pv-mode-line-mode)
+	
+	(defvar pv-mode-line-buffer-identification
+		'(:eval (moody-tab
+						 (format-mode-line
+							(if (projectile-project-p)
+									(propertized-buffer-identification
+									 (concat "%b" (format " [%s]"
+																				(projectile-project-name))))
+                (propertized-buffer-identification "%b")))
+						 20 'down)))
+	(put 'pv-mode-line-buffer-identification 'risky-local-variable t)
+	(make-variable-buffer-local 'pv-mode-line-buffer-identification)
+
+	(defun pv-replace-mode-line-buffer-identification (&optional reverse)
+		(interactive "P")
+		(moody-replace-element 'mode-line-buffer-identification
+													 'pv-mode-line-buffer-identification
+													 reverse)
+		(moody-replace-element 'mode-line-misc-info
+													 'pv-mode-line-mode
+													 reverse))
+	:config
+  (setq x-underline-at-descent-line t)
+	(setq moody-mode-line-height 48)
+  (pv-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
 
 ;; Which Key
 (use-package which-key
@@ -706,16 +770,14 @@
 		("b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" default)))
  '(package-selected-packages
 	 (quote
-		(flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package))))
+		(moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package))))
+
+
+;;; init.el ends here
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#282c34" :foreground "#bbc2cf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 82 :width normal :foundry "ADBO" :family "Hack"))))
  '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
- '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black"))))
- ;;'(spaceline-highlight-face ((t (:foreground "#2d2d2a" :background "#51afef"))))
- )
-
-;;; init.el ends here
+ '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black")))))
