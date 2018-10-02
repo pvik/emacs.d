@@ -143,7 +143,19 @@
 		(load-theme 'doom-one t)
 		(doom-themes-visual-bell-config)
 		(doom-themes-neotree-config)
-		(doom-themes-org-config))
+		(doom-themes-org-config)
+		(let ((line (face-attribute 'mode-line :underline)))
+			(set-face-attribute 'mode-line          nil :overline   line)
+			(set-face-attribute 'mode-line-inactive nil :overline   line)
+			(set-face-attribute 'mode-line-inactive nil :underline  line)
+			(set-face-attribute 'mode-line          nil :box        nil)
+			(set-face-attribute 'mode-line-inactive nil :box        nil)
+			(set-face-attribute 'mode-line          nil :height     pvik-modeline-active-font-height) ;; defined in private.el
+			(set-face-attribute 'mode-line-inactive nil :height     pvik-modeline-inactive-font-height)
+			(set-face-attribute 'mode-line          nil :foreground "#bbc2cf")
+			(set-face-attribute 'mode-line          nil :background "#2257A0")
+			(set-face-attribute 'mode-line-inactive nil :background "#21242b"))
+		(set-face-attribute 'default nil :height pvik-default-font-height))
   
   (defun my-reload-theme-in-daemon (frame)
 		(when (or (daemonp) (not (display-graphic-p)))
@@ -157,19 +169,7 @@
   (add-hook 'after-make-frame-functions #'my-reload-theme-in-daemon)
 	
   ;; for GUI sessions
-  (my-init-theme)
-	
-	(let ((line (face-attribute 'mode-line :underline)))
-    (set-face-attribute 'mode-line          nil :overline   line)
-		(set-face-attribute 'mode-line-inactive nil :overline   line)
-    (set-face-attribute 'mode-line-inactive nil :underline  line)
-    (set-face-attribute 'mode-line          nil :box        nil)
-    (set-face-attribute 'mode-line-inactive nil :box        nil)
-		(set-face-attribute 'mode-line          nil :height     pvik-modeline-active-font-height) ;; defined in private.el
-		(set-face-attribute 'mode-line-inactive nil :height     pvik-modeline-inactive-font-height)
-		(set-face-attribute 'mode-line          nil :foreground "#bbc2cf")
-		(set-face-attribute 'mode-line          nil :background "#2257A0")
-    (set-face-attribute 'mode-line-inactive nil :background "#21242b")))
+  (my-init-theme))
 
 (use-package moody
   :ensure t
@@ -676,3 +676,10 @@
 
 ;;; init.el ends here
 
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
+ '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black")))))
