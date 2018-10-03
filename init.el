@@ -180,7 +180,8 @@
 (use-package diminish
 	:ensure t
 	:config
-	;; (diminish 'flycheck-mode)
+	(diminish 'flycheck-mode)
+	(diminish 'purpose-mode)
 	(diminish 'flyspell-mode)
 	(diminish 'company-mode)
 	(diminish 'yas-minor-mode)
