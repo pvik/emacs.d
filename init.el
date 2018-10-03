@@ -106,7 +106,12 @@
   (setq projectile-require-project-root nil)
   (setq projectile-completion-system 'helm)
   :config
-  (projectile-mode 1))
+	(setq projectile-mode-line
+				'(:eval (if (projectile-project-p)
+										(format "[%s]"
+														(projectile-project-name))
+									"")))
+	(projectile-mode 1))
 
 ;; =======================================================
 ;; =======================================================
@@ -171,42 +176,37 @@
   ;; for GUI sessions
   (my-init-theme))
 
-(use-package moody
-  :ensure t
-	:preface
-	(defvar pv-mode-line-mode
-		'(:eval (moody-tab
-						 (format-mode-line
-							(format "%s" mode-name))
-						 nil 'up)))
-	(put 'pv-mode-line-mode 'risky-local-variable t)
-	(make-variable-buffer-local 'pv-mode-line-mode)
-	
-	(defvar pv-mode-line-buffer-identification
-		'(:eval (moody-tab
-						 (format-mode-line
-							(if (projectile-project-p)
-									(propertized-buffer-identification
-									 (concat "%b" (format " [%s]"
-																				(projectile-project-name))))
-                (propertized-buffer-identification "%b")))
-						 20 'down)))
-	(put 'pv-mode-line-buffer-identification 'risky-local-variable t)
-	(make-variable-buffer-local 'pv-mode-line-buffer-identification)
-
-	(defun pv-replace-mode-line-buffer-identification (&optional reverse)
-		(interactive "P")
-		(moody-replace-element 'mode-line-buffer-identification
-													 'pv-mode-line-buffer-identification
-													 reverse)
-		(moody-replace-element 'mode-line-misc-info
-													 'pv-mode-line-mode
-													 reverse))
+;; trim mode info 
+(use-package diminish
+	:ensure t
 	:config
-  (setq x-underline-at-descent-line t)
-	(setq moody-mode-line-height pvik-modeline-height) ;; defined in private.el
-  (pv-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode))
+	;; (diminish 'flycheck-mode)
+	(diminish 'flyspell-mode)
+	(diminish 'company-mode)
+	(diminish 'yas-minor-mode)
+	(diminish 'which-key-mode)
+	(diminish 'helm-mode)
+	(diminish 'eldoc-mode)
+	(diminish 'smartparens-mode)
+	(diminish 'outline-minor-mode)
+  (diminish 'abbrev-mode)
+	(diminish 'auto-revert-mode)
+	(diminish 'auto-highlight-symbol-mode)
+	(diminish 'aggressive-indent-mode)
+	(diminish 'clj-refactor-mode))
+
+(use-package spaceline
+	:ensure t
+  :config
+	(require 'spaceline-config)
+	(spaceline-emacs-theme)
+	(spaceline-helm-mode)
+	(spaceline-toggle-minor-modes-on)
+  (spaceline-toggle-projectile-root-on)
+  (spaceline-toggle-workspace-number-on)
+  (spaceline-toggle-evil-state-off)
+  (spaceline-toggle-anzu-off)
+  (spaceline-toggle-hud-off))
 
 ;; Which Key
 (use-package which-key
@@ -671,7 +671,7 @@
 		("b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" default)))
  '(package-selected-packages
 	 (quote
-		(moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package))))
+		(diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package))))
 
 
 ;;; init.el ends here
