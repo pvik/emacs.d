@@ -1,0 +1,22 @@
+;;; private.el --- private passwords  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Store sensitive passwords and other data here.
+
+;; NOTE rename this file to private.el
+
+;;; Code:
+
+(setq freenode-password "your password")
+
+(defvar pvik-line-spacing 4)
+
+(defvar pvik-default-font-height 88)
+
+(defvar pvik-modeline-height 48)
+(defvar pvik-modeline-active-font-height 82)
+(defvar pvik-modeline-inactive-font-height 76)
+
+(provide 'private)
+
+;;; pvik-core.el ends here
