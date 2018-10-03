@@ -138,6 +138,8 @@
 
 ;; theme & modeline
 ;; ========
+(use-package diminish
+	:ensure t)
 
 (column-number-mode 1)
 
@@ -160,7 +162,22 @@
 			(set-face-attribute 'mode-line          nil :foreground "#bbc2cf")
 			(set-face-attribute 'mode-line          nil :background "#2257A0")
 			(set-face-attribute 'mode-line-inactive nil :background "#21242b"))
-		(set-face-attribute 'default nil :height pvik-default-font-height))
+		(set-face-attribute 'default nil :height pvik-default-font-height)
+		(diminish 'flycheck-mode)
+		(diminish 'purpose-mode)
+		(diminish 'flyspell-mode)
+		(diminish 'company-mode)
+		(diminish 'yas-minor-mode)
+		(diminish 'which-key-mode)
+		(diminish 'helm-mode)
+		(diminish 'eldoc-mode)
+		(diminish 'smartparens-mode)
+		(diminish 'outline-minor-mode)
+		(diminish 'abbrev-mode)
+		(diminish 'auto-revert-mode)
+		(diminish 'auto-highlight-symbol-mode)
+		(diminish 'aggressive-indent-mode)
+		(diminish 'clj-refactor-mode))
   
   (defun my-reload-theme-in-daemon (frame)
 		(when (or (daemonp) (not (display-graphic-p)))
@@ -175,26 +192,6 @@
 	
   ;; for GUI sessions
   (my-init-theme))
-
-;; trim mode info 
-(use-package diminish
-	:ensure t
-	:config
-	(diminish 'flycheck-mode)
-	(diminish 'purpose-mode)
-	(diminish 'flyspell-mode)
-	(diminish 'company-mode)
-	(diminish 'yas-minor-mode)
-	(diminish 'which-key-mode)
-	(diminish 'helm-mode)
-	(diminish 'eldoc-mode)
-	(diminish 'smartparens-mode)
-	(diminish 'outline-minor-mode)
-  (diminish 'abbrev-mode)
-	(diminish 'auto-revert-mode)
-	(diminish 'auto-highlight-symbol-mode)
-	(diminish 'aggressive-indent-mode)
-	(diminish 'clj-refactor-mode))
 
 (use-package spaceline
 	:ensure t
