@@ -111,6 +111,7 @@
   (setq nrepl-hide-special-buffers t)
   (setq nrepl-log-messages t)
 	(setq cider-repl-use-pretty-printing t)
+	(setq cider-boot-parameters "repl -s watch refresh")
 	(setq nrepl-repl-buffer-name-template "*cider-repl (%r%S)"))
 (use-package helm-cider
   :ensure t
