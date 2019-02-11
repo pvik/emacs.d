@@ -156,6 +156,14 @@
 																	(pdf-occur-global-minor-mode -1)
 																	(tex-pdf-mode -1)))
 
+;; erlang mode
+
+(setq load-path (cons "/usr/lib/erlang/lib/tools-3.0.2/emacs" load-path))
+(require 'erlang-start)
+(setq erlang-root-dir "/usr/lib/erlang/")
+(setq exec-path (cons "/usr/lib/erlang/bin" exec-path))
+(setq erlang-man-root-dir "/usr/lib/erlang/man")
+
 ;; Rust Mode
 
 (use-package rust-mode
