@@ -116,6 +116,20 @@
 ;; =======================================================
 ;; =======================================================
 
+;; Email
+;; =====
+
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+(require 'mu4e)
+(setq mu4e-maildir (expand-file-name "~/mail/ctl"))
+(setq mu4e-sent-folder "/Sent")
+(setq mu4e-drafts-folder "/Drafts")
+(setq mu4e-trash-folder "/Trash")
+(setq mu4e-inbox-folder "/Inbox")
+
+;; =======================================================
+;; =======================================================
+
 ;; User Interface
 ;; ==============
 
