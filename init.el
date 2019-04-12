@@ -121,11 +121,41 @@
 
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
+
+;; use mu4e for e-mail in emacs
+(setq mail-user-agent 'mu4e-user-agent)
+
 (setq mu4e-maildir (expand-file-name "~/mail/ctl"))
 (setq mu4e-sent-folder "/Sent")
 (setq mu4e-drafts-folder "/Drafts")
 (setq mu4e-trash-folder "/Trash")
 (setq mu4e-inbox-folder "/Inbox")
+;; smtp mail setting; these are the same that `gnus' uses.
+(setq
+   message-send-mail-function   'smtpmail-send-it
+   smtpmail-default-smtp-server "localhost"
+   smtpmail-smtp-server         "localhost"
+   smtpmail-local-domain        "centurylink.com"
+	 smtpmail-smtp-service        1025)
+;; don't save messages to Sent Messages, Gmail/IMAP takes care of this
+(setq mu4e-sent-messages-behavior 'delete)
+;; the maildirs you use frequently; access them with 'j' ('jump')
+(setq   mu4e-maildir-shortcuts
+				'(("/Inbox"       . ?i)
+          ("/Sent"        . ?s)))
+;; general emacs mail settings; used when composing e-mail
+;; the non-mu4e-* stuff is inherited from emacs/message-mode
+(setq mu4e-compose-reply-to-address "praveen.vikram@centurylink.com"
+      user-mail-address "praveen.vikram@centurylink.com"
+      user-full-name  "Praveen Vikram")
+(setq mu4e-compose-signature
+			"\n--\nThanks,\nPraveen Vikram\n")
+;; save attachment to my desktop (this can also be a function)
+(setq mu4e-attachment-dir "~/Downloads")
+;; attempt to show images when viewing messages
+(setq mu4e-view-show-images t)
+;; don't keep message buffers around
+(setq message-kill-buffer-on-exit t)
 
 ;; =======================================================
 ;; =======================================================
