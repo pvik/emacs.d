@@ -148,6 +148,20 @@
 ;; (setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
 ;; action to view in the browser:
 (add-to-list 'mu4e-view-actions '("view in browser" . mu4e-action-view-in-browser))
+;; smart refiling
+(setq mu4e-refile-folder
+			(lambda (msg)
+				(cond
+				 ;; report messages go to /auto-reports
+				 ((mu4e-message-contact-field-matches msg :from
+																							"mtb.bridge@centurylink.com")
+					"/auto-reports")
+				 ((mu4e-message-contact-field-matches msg :from
+																							"AR_SCRIPT@centurylink.com")
+					"/auto-reports")
+				 ;; everything else goes to /archive
+				 ;; important to have a catch-all at the end!
+				 (t  "/archive"))))
 ;; the maildirs you use frequently; access them with 'j' ('jump')
 (setq   mu4e-maildir-shortcuts
 				'(("/Inbox"       . ?i)
