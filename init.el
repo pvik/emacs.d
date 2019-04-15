@@ -137,12 +137,31 @@
    smtpmail-smtp-server         "localhost"
    smtpmail-local-domain        "centurylink.com"
 	 smtpmail-smtp-service        1025)
+;; give me ISO(ish) format date-time stamps in the header list
+(setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
+;;rename files when moving
+;;NEEDED FOR MBSYNC
+(setq mu4e-change-filenames-when-moving t)
 ;; don't save messages to Sent Messages, Gmail/IMAP takes care of this
 (setq mu4e-sent-messages-behavior 'delete)
+;; use pandoc for html email, it is much better than the default html2tex
+;; (setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
+;; action to view in the browser:
+(add-to-list 'mu4e-view-actions '("view in browser" . mu4e-action-view-in-browser))
 ;; the maildirs you use frequently; access them with 'j' ('jump')
 (setq   mu4e-maildir-shortcuts
 				'(("/Inbox"       . ?i)
           ("/Sent"        . ?s)))
+;; the headers to show in the headers list -- a pair of a field
+;; and its width, with `nil' meaning 'unlimited'
+(setq mu4e-headers-fields
+			'( (:date          .  25)    ;; alternatively, use :human-date
+				 (:flags         .   6)
+				 (:from          .  22)
+				 (:subject       .  nil))) ;; alternatively, use :thread-subject
+; Program to get mail.
+;; Called when 'U' is pressed in main view, or C-c C-u elsewhere
+(setq mu4e-get-mail-command "mbsync -a")
 ;; general emacs mail settings; used when composing e-mail
 ;; the non-mu4e-* stuff is inherited from emacs/message-mode
 (setq mu4e-compose-reply-to-address "praveen.vikram@centurylink.com"
@@ -156,6 +175,13 @@
 (setq mu4e-view-show-images t)
 ;; don't keep message buffers around
 (setq message-kill-buffer-on-exit t)
+;; do not ask for confirmation on quit
+(setq mu4e-confirm-quit nil)
+
+(global-set-key (kbd "C-<f6>") 'mu4e)
+
+;; https://matt.hackinghistory.ca/2016/11/18/sending-html-mail-with-mu4e/
+;; https://github.com/djcb/mu/issues/392
 
 ;; =======================================================
 ;; =======================================================
