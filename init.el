@@ -175,7 +175,7 @@
 				 (:subject       .  nil))) ;; alternatively, use :thread-subject
 ; Program to get mail.
 ;; Called when 'U' is pressed in main view, or C-c C-u elsewhere
-(setq mu4e-get-mail-command "flock -n /tmp/email.lock mbsync -a"
+(setq mu4e-get-mail-command "mbsync -a"
 			mu4e-update-interval 300)
 ;; general emacs mail settings; used when composing e-mail
 ;; the non-mu4e-* stuff is inherited from emacs/message-mode
@@ -192,6 +192,8 @@
 (setq mu4e-view-show-images t)
 ;; don't keep message buffers around
 (setq message-kill-buffer-on-exit t)
+;; do not reply to self
+(setq mu4e-compose-dont-reply-to-self t)
 ;; do not ask for confirmation on quit
 (setq mu4e-confirm-quit nil)
 
