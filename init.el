@@ -175,7 +175,8 @@
 				 (:subject       .  nil))) ;; alternatively, use :thread-subject
 ; Program to get mail.
 ;; Called when 'U' is pressed in main view, or C-c C-u elsewhere
-(setq mu4e-get-mail-command "mbsync -a")
+(setq mu4e-get-mail-command "flock -n /tmp/email.lock mbsync -a"
+			mu4e-update-interval 300)
 ;; general emacs mail settings; used when composing e-mail
 ;; the non-mu4e-* stuff is inherited from emacs/message-mode
 (setq mu4e-compose-reply-to-address "praveen.vikram@centurylink.com"
@@ -185,6 +186,8 @@
 			"\n--\nThanks,\nPraveen Vikram\n")
 ;; save attachment to my desktop (this can also be a function)
 (setq mu4e-attachment-dir "~/Downloads")
+;; split view # of lines to show in header view
+(setq mu4e-headers-visible-lines 20)
 ;; attempt to show images when viewing messages
 (setq mu4e-view-show-images t)
 ;; don't keep message buffers around
@@ -196,6 +199,19 @@
 
 ;; https://matt.hackinghistory.ca/2016/11/18/sending-html-mail-with-mu4e/
 ;; https://github.com/djcb/mu/issues/392
+
+;; Notifications
+(use-package mu4e-alert
+  :ensure t
+  :config
+	(mu4e-alert-set-default-style 'libnotify)
+	(add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+	(add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+	(setq mu4e-alert-interesting-mail-query
+      (concat
+       "flag:unread"  ;; Unread of mail only in Inbox
+			 " AND maildir:"
+       "\"/Inbox\"")))
 
 ;; =======================================================
 ;; =======================================================
