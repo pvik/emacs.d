@@ -183,13 +183,15 @@
       user-mail-address "praveen.vikram@centurylink.com"
       user-full-name  "Praveen Vikram")
 (setq mu4e-compose-signature
-			"\n--\nThanks,\nPraveen Vikram\n")
+			"\nThanks,\nPraveen Vikram\n")
 ;; save attachment to my desktop (this can also be a function)
 (setq mu4e-attachment-dir "~/Downloads")
 ;; split view # of lines to show in header view
 (setq mu4e-headers-visible-lines 20)
 ;; attempt to show images when viewing messages
 (setq mu4e-view-show-images t)
+;; stop editor from inserting line breaks
+(add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
 ;; don't keep message buffers around
 (setq message-kill-buffer-on-exit t)
 ;; do not reply to self
@@ -201,6 +203,16 @@
 
 ;; https://matt.hackinghistory.ca/2016/11/18/sending-html-mail-with-mu4e/
 ;; https://github.com/djcb/mu/issues/392
+
+;; handle signature
+ (defun insert-mu4e-sig-here ()
+    "Insert the mu4e signature here, assuming it is a string."
+    (interactive)
+    (save-excursion
+      (when (stringp mu4e-compose-signature)
+        (insert mu4e-compose-signature))))
+
+(add-hook 'mu4e-compose-mode-hook 'insert-mu4e-sig-here)
 
 ;; Notifications
 (use-package mu4e-alert
