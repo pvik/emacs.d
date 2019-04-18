@@ -175,8 +175,8 @@
 				 (:subject       .  nil))) ;; alternatively, use :thread-subject
 ; Program to get mail.
 ;; Called when 'U' is pressed in main view, or C-c C-u elsewhere
-(setq mu4e-get-mail-command "mbsync -a")
-;; (setq mu4e-update-interval 300)
+;;(setq mu4e-get-mail-command t)
+(setq mu4e-update-interval 120)
 ;; general emacs mail settings; used when composing e-mail
 ;; the non-mu4e-* stuff is inherited from emacs/message-mode
 (setq mu4e-compose-reply-to-address "praveen.vikram@centurylink.com"
