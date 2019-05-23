@@ -119,6 +119,9 @@
 ;; Email
 ;; =====
 
+(use-package org-mime
+  :ensure t	)
+
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
 
@@ -132,6 +135,7 @@
 (setq mu4e-inbox-folder "/Inbox")
 ;; smtp mail setting; these are the same that `gnus' uses.
 (setq
+ ;; authentication details set in ~/.authinfo
    message-send-mail-function   'smtpmail-send-it
    smtpmail-default-smtp-server "localhost"
    smtpmail-smtp-server         "localhost"
@@ -161,7 +165,7 @@
 					"/auto-reports")
 				 ;; everything else goes to /archive
 				 ;; important to have a catch-all at the end!
-				 (t  "/archive"))))
+				 (t  "/archive/Inbox"))))
 ;; the maildirs you use frequently; access them with 'j' ('jump')
 (setq   mu4e-maildir-shortcuts
 				'(("/Inbox"       . ?i)
@@ -183,7 +187,7 @@
       user-mail-address "praveen.vikram@centurylink.com"
       user-full-name  "Praveen Vikram")
 (setq mu4e-compose-signature
-			"\nThanks,\nPraveen Vikram\n")
+			"#+BEGIN_SRC\nThanks,\nPraveen Vikram\n#+END_SRC")
 ;; save attachment to my desktop (this can also be a function)
 (setq mu4e-attachment-dir "~/Downloads")
 ;; split view # of lines to show in header view
@@ -191,7 +195,26 @@
 ;; attempt to show images when viewing messages
 (setq mu4e-view-show-images t)
 ;; stop editor from inserting line breaks
-(add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
+;; (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
+(defun htmlize-before-send ()
+    "When in an org-mu4e-compose-org-mode message, htmlize it."
+    (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
+      (message-mode)
+      (org-mime-htmlize)))
+
+(advice-add 'message-send-and-exit :before 'htmlize-before-send)
+
+(add-hook 'mu4e-compose-mode-hook
+    (defun my-do-compose-stuff ()
+       "My settings for message composition."
+       (visual-line-mode)
+       (org-mu4e-compose-org-mode)
+			 (use-hard-newlines -1)))
+
+(require 'org-mu4e)
+;; convert org mode to HTML automatically
+(setq org-mu4e-convert-to-html t)
+
 ;; don't keep message buffers around
 (setq message-kill-buffer-on-exit t)
 ;; do not reply to self
@@ -205,14 +228,14 @@
 ;; https://github.com/djcb/mu/issues/392
 
 ;; handle signature
- (defun insert-mu4e-sig-here ()
-    "Insert the mu4e signature here, assuming it is a string."
-    (interactive)
-    (save-excursion
-      (when (stringp mu4e-compose-signature)
-        (insert mu4e-compose-signature))))
+;;  (defun insert-mu4e-sig-here ()
+;;     "Insert the mu4e signature here, assuming it is a string."
+;;     (interactive)
+;;     (save-excursion
+;;       (when (stringp mu4e-compose-signature)
+;;         (insert mu4e-compose-signature))))
 
-(add-hook 'mu4e-compose-mode-hook 'insert-mu4e-sig-here)
+;; (add-hook 'mu4e-compose-mode-hook 'insert-mu4e-sig-here)
 
 ;; Notifications
 (use-package mu4e-alert
