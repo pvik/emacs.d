@@ -196,6 +196,7 @@
 (setq mu4e-view-show-images t)
 ;; stop editor from inserting line breaks
 ;; (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
+(setq org-mime-beautify-quoted-mail t)
 (defun htmlize-before-send ()
     "When in an org-mu4e-compose-org-mode message, htmlize it."
     (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
@@ -818,7 +819,7 @@
 		("b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" default)))
  '(package-selected-packages
 	 (quote
-		(company-distel diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package)))
+		(go-mode company-distel diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package)))
  '(safe-local-variable-values
 	 (quote
 		((org-edit-src-content . 0)

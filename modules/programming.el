@@ -164,6 +164,14 @@
 (setq exec-path (cons "/usr/lib/erlang/bin" exec-path))
 (setq erlang-man-root-dir "/usr/lib/erlang/man")
 
+;; go mode
+
+(use-package go-mode
+  :ensure t
+	:config
+	(add-to-list 'exec-path "/home/elric/Work/gocode/bin")
+	(add-hook 'before-save-hook 'gofmt-before-save))
+
 ;; Rust Mode
 
 (use-package rust-mode
