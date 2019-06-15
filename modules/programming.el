@@ -171,6 +171,8 @@
 	:config
 	(add-to-list 'exec-path "/home/elric/Work/gocode/bin")
 	(add-hook 'before-save-hook 'gofmt-before-save))
+(use-package go-playground
+  :ensure t)
 
 ;; Rust Mode
 
