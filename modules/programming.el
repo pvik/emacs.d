@@ -168,10 +168,20 @@
 
 (use-package go-mode
   :ensure t
+	:preface
+	(defun my-go-mode-hook ()
+		(go-projectile-set-gopath)
+		(local-set-key (kbd "M-.") 'godef-jump)
+		(local-set-key (kbd "M-*") 'pop-tag-mark))
 	:config
 	(add-to-list 'exec-path "/home/elric/Work/gocode/bin")
-	(add-hook 'before-save-hook 'gofmt-before-save))
+	(add-hook 'before-save-hook 'gofmt-before-save)
+	(local-set-key (kbd "M-.") 'godef-jump)
+	(local-set-key (kbd "M-*") 'pop-tag-mark)
+	(add-hook 'go-mode-hook 'my-go-mode-hook))
 (use-package go-playground
+  :ensure t)
+(use-package go-projectile
   :ensure t)
 
 ;; Rust Mode
