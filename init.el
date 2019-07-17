@@ -113,6 +113,31 @@
 									"")))
 	(projectile-mode 1))
 
+;; Buffers
+
+(use-package ibuffer
+  :bind ("C-x C-b" . ibuffer))
+
+(use-package ibuffer-projectile
+  :after ibuffer
+  :preface
+  (defun my/ibuffer-projectile ()
+    (ibuffer-projectile-set-filter-groups)
+    (unless (eq ibuffer-sorting-mode 'alphabetic)
+      (ibuffer-do-sort-by-alphabetic)))
+  :hook (ibuffer . my/ibuffer-projectile))
+
+(defvar *protected-buffers* '("*scratch*" "*Messages*")
+  "Buffers that cannot be killed.")
+
+(defun my/protected-buffers ()
+  "Protects some buffers from being killed."
+  (dolist (buffer *protected-buffers*)
+    (with-current-buffer buffer
+      (emacs-lock-mode 'kill))))
+
+(add-hook 'after-init-hook #'my/protected-buffers)
+
 ;; =======================================================
 ;; =======================================================
 
@@ -256,6 +281,10 @@
 
 ;; User Interface
 ;; ==============
+
+(use-package alert
+  :defer 1
+  :custom (alert-default-style 'libnotify))
 
 (use-package unicode-fonts
   :ensure t
@@ -496,11 +525,11 @@
 ;; helm-tramp
 (use-package helm-tramp
   :ensure t
-	:config
-	(add-hook 'helm-tramp-pre-command-hook '(lambda () (global-aggressive-indent-mode 0)
-																						(projectile-mode 0)))
-	(add-hook 'helm-tramp-quit-hook '(lambda () (global-aggressive-indent-mode 1)
-																		 (projectile-mode 1))))
+  :config
+  (add-hook 'helm-tramp-pre-command-hook '(lambda () (global-aggressive-indent-mode 0)
+					    (projectile-mode 0)))
+  (add-hook 'helm-tramp-quit-hook '(lambda () (global-aggressive-indent-mode 1)
+				     (projectile-mode 1))))
 
 (use-package exec-path-from-shell
   :ensure t)
@@ -545,6 +574,8 @@
 	:ensure t)
 
 ;; plantuml mode
+(use-package htmlize
+	:ensure t)
 (use-package plantuml-mode
   :ensure t)
 (use-package flycheck-plantuml
@@ -568,7 +599,23 @@
 ;; ==========
 
 (use-package json-mode
-  :ensure t)
+  :mode "\\.json\\'"
+  :hook (before-save . my/json-mode-before-save-hook)
+  :preface
+  (defun my/json-mode-before-save-hook ()
+    (when (eq major-mode 'json-mode)
+      (json-pretty-print-buffer))))
+
+(defun my/json-array-of-numbers-on-one-line (encode array)
+  "Prints the arrays of numbers in one line."
+  (let* ((json-encoding-pretty-print
+          (and json-encoding-pretty-print
+               (not (loop for x across array always (numberp x)))))
+         (json-encoding-separator (if json-encoding-pretty-print "," ", ")))
+    (funcall encode array)))
+:config
+(advice-add 'json-encode-array :around #'my/json-array-of-numbers-on-one-line)
+
 ;; (use-package nxml
 ;;   :ensure t)
 (use-package toml-mode
@@ -657,7 +704,13 @@
   (global-set-key (kbd "C-c o r") #'org-refile)
   (global-set-key (kbd "C-c o o n") #'pvik--org-open-notes)
   (global-set-key (kbd "C-c o o w") #'pvik--org-open-work-notes)
-  (global-set-key (kbd "C-c o o p") #'pvik--org-open-project-notes))
+  (global-set-key (kbd "C-c o o p") #'pvik--org-open-project-notes)
+	(org-babel-do-load-languages
+	 'org-babel-load-languages
+	 '(;; other Babel languages
+		 (plantuml . t)))
+	(setq org-plantuml-jar-path
+      (expand-file-name "~/.emacs.d/plantuml.jar")))
 (use-package org-src
   :ensure nil
   :after org
@@ -814,12 +867,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(alert-default-style (quote libnotify))
  '(custom-safe-themes
 	 (quote
 		("b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" default)))
  '(package-selected-packages
 	 (quote
-		(go-mode company-distel diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package)))
+		(htmlize dockerfile-mode helm-posframe posframe go-mode company-distel diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package)))
  '(safe-local-variable-values
 	 (quote
 		((org-edit-src-content . 0)

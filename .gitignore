@@ -13,3 +13,4 @@ recentf
 var/
 private.el
 tramp
+*.jar
