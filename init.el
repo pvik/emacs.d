@@ -710,7 +710,10 @@
 	 '(;; other Babel languages
 		 (plantuml . t)))
 	(setq org-plantuml-jar-path
-      (expand-file-name "~/.emacs.d/plantuml.jar")))
+      (expand-file-name "~/.emacs.d/plantuml.jar"))
+	(defun my-org-confirm-babel-evaluate (lang body)
+		(not (string= lang "plantuml")))  ; don't ask for plantuml
+	(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate))
 (use-package org-src
   :ensure nil
   :after org
