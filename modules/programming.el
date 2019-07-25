@@ -110,9 +110,9 @@
   :config
   (setq nrepl-hide-special-buffers t)
   (setq nrepl-log-messages t)
-	(setq cider-repl-use-pretty-printing t)
-	(setq cider-boot-parameters "repl -s watch refresh")
-	(setq nrepl-repl-buffer-name-template "*cider-repl (%r%S)"))
+  (setq cider-repl-use-pretty-printing t)
+  (setq cider-boot-parameters "repl -s watch refresh")
+  (setq nrepl-repl-buffer-name-template "*cider-repl (%r%S)"))
 (use-package helm-cider
   :ensure t
   :after cider)
@@ -129,13 +129,13 @@
 (use-package clojure-mode
   :ensure t
   :after (;paredit
-					smartparens rainbow-delimiters aggressive-indent cider flycheck-clojure clj-refactor projectile)
+		  smartparens rainbow-delimiters aggressive-indent cider flycheck-clojure clj-refactor projectile)
   ;;:init
   ;;(add-to-list 'company-etags-mode 'clojure-mode)
   )
 
 ;;(add-hook 'clojure-mode-hook #'paredit-mode)
-																				;(add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+										;(add-hook 'clojure-mode-hook #'smartparens-strict-mode)
 (add-hook 'clojure-mode-hook 'turn-on-smartparens-strict-mode)
 (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
@@ -144,17 +144,17 @@
 (add-hook 'clojure-mode-hook #'hl-todo-mode)
 (add-hook 'clojure-mode-hook #'outline-minor-mode)
 (add-hook 'clojure-mode-hook (lambda ()
-															 (clj-refactor-mode 1)
-															 (helm-cider-mode 1)
-															 (yas-minor-mode 1) ; for adding require/use/import statements
-															 (cljr-add-keybindings-with-prefix "M-RET")
-															 (pdf-occur-global-minor-mode -1)
-															 (tex-pdf-mode -1)))
+							   (clj-refactor-mode 1)
+							   (helm-cider-mode 1)
+							   (yas-minor-mode 1) ; for adding require/use/import statements
+							   (cljr-add-keybindings-with-prefix "M-RET")
+							   (pdf-occur-global-minor-mode -1)
+							   (tex-pdf-mode -1)))
 (add-hook 'cider-repl-mode-hook 'turn-on-smartparens-strict-mode)
 (add-hook 'cider-repl-mode-hook (lambda ()
-																	(helm-cider-mode 1)
-																	(pdf-occur-global-minor-mode -1)
-																	(tex-pdf-mode -1)))
+								  (helm-cider-mode 1)
+								  (pdf-occur-global-minor-mode -1)
+								  (tex-pdf-mode -1)))
 
 ;; erlang mode
 
@@ -165,20 +165,26 @@
 (setq erlang-man-root-dir "/usr/lib/erlang/man")
 
 ;; go mode
-
+(use-package company-go
+  :config
+  (setq company-tooltip-limit 20)                      ; bigger popup window
+  (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
+  (setq company-echo-delay 0)                          ; remove annoying blinking
+  (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
+  )
 (use-package go-mode
   :ensure t
-	:preface
-	(defun my-go-mode-hook ()
-		(go-projectile-set-gopath)
-		(local-set-key (kbd "M-.") 'godef-jump)
-		(local-set-key (kbd "M-*") 'pop-tag-mark))
-	:config
-	(add-to-list 'exec-path "/home/elric/Work/gocode/bin")
-	(add-hook 'before-save-hook 'gofmt-before-save)
+  :preface
+  (defun my-go-mode-hook ()
+	(go-projectile-set-gopath)
 	(local-set-key (kbd "M-.") 'godef-jump)
-	(local-set-key (kbd "M-*") 'pop-tag-mark)
-	(add-hook 'go-mode-hook 'my-go-mode-hook))
+	(local-set-key (kbd "M-*") 'pop-tag-mark))
+  :config
+  (add-to-list 'exec-path "/home/elric/Work/gocode/bin")
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  (local-set-key (kbd "M-.") 'godef-jump)
+  (local-set-key (kbd "M-*") 'pop-tag-mark)
+  (add-hook 'go-mode-hook 'my-go-mode-hook))
 (use-package go-playground
   :ensure t)
 (use-package go-projectile
@@ -202,23 +208,23 @@
   (add-hook 'rust-mode-hook 'cargo-minor-mode))
 (use-package flycheck-rust
   :ensure t
-	:config
-	(with-eval-after-load 'rust-mode
-		(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
+  :config
+  (with-eval-after-load 'rust-mode
+	(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 ;; (use-package flymake-rust
 ;;   :ensure t)
 (use-package racer
   :ensure t)
 (use-package cargo
   :ensure t
-	:config
-	(add-hook 'rust-mode-hook 'cargo-minor-mode))
+  :config
+  (add-hook 'rust-mode-hook 'cargo-minor-mode))
 
 ;; nim mode
 (use-package nim-mode
   :ensure t
-	:config
-	(add-hook 'nim-mode-hook 'nimsuggest-mode))
+  :config
+  (add-hook 'nim-mode-hook 'nimsuggest-mode))
 
 ;; sql mode
 (use-package sql-indent
@@ -248,9 +254,9 @@
   (setq web-mode-enable-current-column-highlight t))
 
 (add-hook 'web-mode-hook (lambda ()
-													 (electric-indent-mode -1)
-													 (pdf-occur-global-minor-mode -1)
-													 (tex-pdf-mode -1)))
+						   (electric-indent-mode -1)
+						   (pdf-occur-global-minor-mode -1)
+						   (tex-pdf-mode -1)))
 
 (use-package css-mode
   :ensure nil
@@ -296,8 +302,8 @@
                 clojure-mode-hook
                 python-mode-hook
                 js2-mode-hook
-								sgml-mode-hook
-								json-mode-hook))
+				sgml-mode-hook
+				json-mode-hook))
   (add-hook mode
             '(lambda ()
                (flyspell-prog-mode))))
