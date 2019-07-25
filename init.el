@@ -303,56 +303,56 @@
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
   (global-set-key [f6] 'neotree-toggle))
 
-(use-package centaur-tabs
-  :demand
-  :init
-  (defun centaur-tabs-buffer-groups ()
-	"`centaur-tabs-buffer-groups' control buffers' group rules.
+;; (use-package centaur-tabs
+;;   :demand
+;;   :init
+;;   (defun centaur-tabs-buffer-groups ()
+;; 	"`centaur-tabs-buffer-groups' control buffers' group rules.
 
-    Group centaur-tabs with mode if buffer is derived from `eshell-mode' `emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
-    All buffer name start with * will group to \"Emacs\".
-    Other buffer group by `centaur-tabs-get-group-name' with project name."
-	(list
-	 (cond
-	  ((or (string-equal "*" (substring (buffer-name) 0 1))
-		   (memq major-mode '(magit-process-mode
-							  magit-status-mode
-							  magit-diff-mode
-							  magit-log-mode
-							  magit-file-mode
-							  magit-blob-mode
-							  magit-blame-mode
-							  )))
-	   "Emacs")
-	  ((derived-mode-p 'prog-mode)
-	   "Editing")
-	  ((derived-mode-p 'dired-mode)
-	   "Dired")
-	  ((memq major-mode '(helpful-mode
-						  help-mode))
-	   "Help")
-	  ((memq major-mode '(org-mode
-						  org-agenda-clockreport-mode
-						  org-src-mode
-						  org-agenda-mode
-						  org-beamer-mode
-						  org-indent-mode
-						  org-bullets-mode
-						  org-cdlatex-mode
-						  org-agenda-log-mode
-						  diary-mode))
-	   "OrgMode")
-	  (t
-	   (centaur-tabs-get-group-name (current-buffer))))))
-  :hook
-  (dired-mode . centaur-tabs-local-mode)
-  :config
-  (centaur-tabs-mode t)
-  (setq centaur-tabs-set-bar 'over)
-  (setq centaur-tabs-modified-marker "*")
-  :bind
-  ("C-S-<iso-lefttab>" . centaur-tabs-backward)
-  ("C-<tab>" . centaur-tabs-forward))
+;;     Group centaur-tabs with mode if buffer is derived from `eshell-mode' `emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
+;;     All buffer name start with * will group to \"Emacs\".
+;;     Other buffer group by `centaur-tabs-get-group-name' with project name."
+;; 	(list
+;; 	 (cond
+;; 	  ((or (string-equal "*" (substring (buffer-name) 0 1))
+;; 		   (memq major-mode '(magit-process-mode
+;; 							  magit-status-mode
+;; 							  magit-diff-mode
+;; 							  magit-log-mode
+;; 							  magit-file-mode
+;; 							  magit-blob-mode
+;; 							  magit-blame-mode
+;; 							  )))
+;; 	   "Emacs")
+;; 	  ((derived-mode-p 'prog-mode)
+;; 	   "Editing")
+;; 	  ((derived-mode-p 'dired-mode)
+;; 	   "Dired")
+;; 	  ((memq major-mode '(helpful-mode
+;; 						  help-mode))
+;; 	   "Help")
+;; 	  ((memq major-mode '(org-mode
+;; 						  org-agenda-clockreport-mode
+;; 						  org-src-mode
+;; 						  org-agenda-mode
+;; 						  org-beamer-mode
+;; 						  org-indent-mode
+;; 						  org-bullets-mode
+;; 						  org-cdlatex-mode
+;; 						  org-agenda-log-mode
+;; 						  diary-mode))
+;; 	   "OrgMode")
+;; 	  (t
+;; 	   (centaur-tabs-get-group-name (current-buffer))))))
+;;   :hook
+;;   (dired-mode . centaur-tabs-local-mode)
+;;   :config
+;;   (centaur-tabs-mode t)
+;;   (setq centaur-tabs-set-bar 'over)
+;;   (setq centaur-tabs-modified-marker "*")
+;;   :bind
+;;   ("C-S-<iso-lefttab>" . centaur-tabs-backward)
+;;   ("C-<tab>" . centaur-tabs-forward))
 
 ;; theme & modeline
 ;; ========
@@ -377,9 +377,10 @@
 			(set-face-attribute 'mode-line-inactive nil :box        nil)
 			(set-face-attribute 'mode-line          nil :height     pvik-modeline-active-font-height) ;; defined in private.el
 			(set-face-attribute 'mode-line-inactive nil :height     pvik-modeline-inactive-font-height)
-			(set-face-attribute 'mode-line          nil :foreground "#bbc2cf")
-			(set-face-attribute 'mode-line          nil :background "#2257A0")
-			(set-face-attribute 'mode-line-inactive nil :background "#21242b"))
+			;; (set-face-attribute 'mode-line          nil :foreground "#bbc2cf")
+			;; (set-face-attribute 'mode-line          nil :background "#2257A0")
+			;; (set-face-attribute 'mode-line-inactive nil :background "#21242b")
+			)
 		(set-face-attribute 'default nil :height pvik-default-font-height)
 		(diminish 'flycheck-mode)
 		(diminish 'purpose-mode)
@@ -756,15 +757,18 @@
   (global-set-key (kbd "C-c o o n") #'pvik--org-open-notes)
   (global-set-key (kbd "C-c o o w") #'pvik--org-open-work-notes)
   (global-set-key (kbd "C-c o o p") #'pvik--org-open-project-notes)
-	(org-babel-do-load-languages
-	 'org-babel-load-languages
-	 '(;; other Babel languages
-		 (plantuml . t)))
-	(setq org-plantuml-jar-path
-      (expand-file-name "~/.emacs.d/plantuml.jar"))
-	(defun my-org-confirm-babel-evaluate (lang body)
-		(not (string= lang "plantuml")))  ; don't ask for plantuml
-	(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(;; other Babel languages
+	 (plantuml . t)
+	 (python . t)
+	 (shell . t)
+	 (clojure . t)))
+  (setq org-plantuml-jar-path
+		(expand-file-name "~/.emacs.d/plantuml.jar"))
+  (defun my-org-confirm-babel-evaluate (lang body)
+	(not (string= lang "plantuml")))  ; don't ask for plantuml
+  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate))
 (use-package org-src
   :ensure nil
   :after org
@@ -924,10 +928,10 @@
  '(alert-default-style (quote libnotify))
  '(custom-safe-themes
    (quote
-	("84da7b37214b4ac095a55518502dfa82633bee74f64daf6e1785322e77516f96" "80365dd15f97396bdc38490390c23337063c8965c4556b8f50937e63b5e9a65c" "b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" default)))
+	("4e10cdf7d030fb41061cf57c74f6ddfc19db8d4af6c8e0723dc77f9922543a3d" "34c99997eaa73d64b1aaa95caca9f0d64229871c200c5254526d0062f8074693" "84da7b37214b4ac095a55518502dfa82633bee74f64daf6e1785322e77516f96" "80365dd15f97396bdc38490390c23337063c8965c4556b8f50937e63b5e9a65c" "b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" default)))
  '(package-selected-packages
    (quote
-	(centaur-tabs company-go htmlize dockerfile-mode helm-posframe posframe go-mode company-distel diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package)))
+	(sql-indent centaur-tabs company-go htmlize dockerfile-mode helm-posframe posframe go-mode company-distel diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package)))
  '(safe-local-variable-values
    (quote
 	((org-edit-src-content . 0)

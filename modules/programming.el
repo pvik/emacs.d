@@ -228,6 +228,7 @@
 
 ;; sql mode
 (use-package sql-indent
+  :ensure t
   :after (:any sql sql-interactive-mode))
 
 ;;  tech modes
