@@ -543,8 +543,8 @@
 ;; Enable tabs and set prefered indentation width in spaces
 ;; (In this case the indent size is 2-spaces wide)
 (setq-default indent-tabs-mode t)
-(setq-default standard-indent 2)
-(setq-default tab-width 2)
+(setq-default standard-indent 4)
+(setq-default tab-width 4)
 
 ;; Make the backspace properly erase the tab instead of
 ;; removing 1 space at a time.
