@@ -902,6 +902,9 @@
 ;; Desktop
 (desktop-save-mode 1)
 
+;; Default font
+(set-default-font "Hack-9")
+
 ;; Emacs Personal Functions and Customization
 ;; ==========================================
 (require 'pvik-core)
