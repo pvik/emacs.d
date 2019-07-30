@@ -100,7 +100,23 @@
 ;; common lisp
 (load (expand-file-name "~/.quicklisp/slime-helper.el"))
 ;; Replace "sbcl" with the path to your implementation
-(setq inferior-lisp-program "sbcl")
+(setq inferior-lisp-program "/usr/bin/sbcl")
+(use-package slime
+  :ensure t
+  :config
+  (slime-setup '(slime-fancy slime-quicklisp slime-asdf))
+  (add-hook 'slime-mode-hook 'turn-on-smartparens-strict-mode)
+  (add-hook 'slime-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'slime-mode-hook #'aggressive-indent-mode)
+  (add-hook 'slime-mode-hook #'show-paren-mode)
+  (add-hook 'slime-mode-hook #'projectile-mode)
+  (add-hook 'slime-mode-hook #'hl-todo-mode)
+  (add-hook 'slime-mode-hook #'outline-minor-mode)
+  ;; repl
+  (add-hook 'slime-repl-mode-hook 'turn-on-smartparens-strict-mode)
+  (add-hook 'slime-repl-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'slime-repl-mode-hook #'aggressive-indent-mode)
+  (add-hook 'slime-repl-mode-hook #'show-paren-mode))
 
 ;; clojure
 (use-package cider
