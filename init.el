@@ -1,4 +1,4 @@
-;;; init.el --- Summary
+;; init.el --- Summary
 ;;; Commentary:
 ;;; Emacs init file
 
@@ -861,7 +861,7 @@
 					 :nickserv-password ,freenode-password
 					 :reduce-lurker-spam t
            :channels (;;"#emacs-circe"
-											:after-auth "#clojure" "#java")))))
+					  :after-auth "#clojure" "#java" "#lisp")))))
 (use-package helm-circe
   :ensure t
   :after (helm circe))
