@@ -619,6 +619,7 @@
 (use-package magit
   :ensure t
   :config
+  (global-set-key (kbd "C-x g") 'magit-status)
   (setq vc-handled-backends (delq 'Git vc-handled-backends)))
 
 ;; Restclient
