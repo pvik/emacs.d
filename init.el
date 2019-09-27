@@ -617,7 +617,9 @@
 
 ;; magit
 (use-package magit
-	:ensure t)
+  :ensure t
+  :config
+  (setq vc-handled-backends (delq 'Git vc-handled-backends)))
 
 ;; Restclient
 (use-package restclient
