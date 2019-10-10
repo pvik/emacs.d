@@ -42,8 +42,10 @@
  left-margin-width 1 right-margin-width 1     ; Add left and right margins
  select-enable-clipboard t       ; Merge system's and Emacs' clipboard
  cursor-type '(bar . 2)          ; set cursor type to bar
- line-spacing pvik-line-spacing) ; line spacing - in private.el
+ line-spacing pvik-line-spacing  ; line spacing - in private.el
+ word-wrap t)
 
+(global-visual-line-mode t)
 (delete-selection-mode 1)        ; Replace region when inserting text
 (global-hl-line-mode t)          ; Highlight current line
 (fset 'yes-or-no-p 'y-or-n-p)    ; change all prompts to y or n
@@ -410,7 +412,8 @@
   (add-hook 'after-make-frame-functions #'my-reload-theme-in-daemon)
 	
   ;; for GUI sessions
-  (my-init-theme))
+  (my-init-theme)
+  (set-face-attribute 'default nil :height pvik-default-font-height))
 
 (use-package spaceline
 	:ensure t
@@ -944,13 +947,18 @@
 	((org-edit-src-content . 0)
 	 (org-src-preserve-indentation)))))
 
+;; fonts
+(set-face-attribute 'default nil :height pvik-default-font-height)
+(set-face-attribute 'mode-line          nil :height     pvik-modeline-active-font-height) ;; defined in private.el
+(set-face-attribute 'mode-line-inactive nil :height     pvik-modeline-inactive-font-height)
+(setq-default line-spacing pvik-line-spacing)
 
 ;;; init.el ends here
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
- '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black")))))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
+;;  '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black")))))
