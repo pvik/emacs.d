@@ -146,6 +146,8 @@
   :ensure t
   :after (;paredit
 		  smartparens rainbow-delimiters aggressive-indent cider flycheck-clojure clj-refactor projectile)
+  :config
+  (setq clojure-align-forms-automatically t)
   ;;:init
   ;;(add-to-list 'company-etags-mode 'clojure-mode)
   )
