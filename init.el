@@ -769,6 +769,7 @@
    'org-babel-load-languages
    '(;; other Babel languages
 	 (plantuml . t)
+	 (restclient . t)
 	 (python . t)
 	 (shell . t)
 	 (clojure . t)))
