@@ -368,9 +368,9 @@
   :preface
   (defun my-init-theme (&optional _frame)
 		(load-theme 'doom-one t)
-		(doom-themes-visual-bell-config)
-		(doom-themes-neotree-config)
-		(doom-themes-org-config)
+		(doom-themes-visual-bell-config) ;; Enable flashing mode-line on errors
+		(doom-themes-neotree-config) ;; Enable custom neotree theme (all-the-icons must be installed!)
+		(doom-themes-org-config) ;; Corrects (and improves) org-mode's native fontification.
 		(let ((line (face-attribute 'mode-line :underline)))
 			(set-face-attribute 'mode-line          nil :overline   line)
 			(set-face-attribute 'mode-line-inactive nil :overline   line)
@@ -415,18 +415,23 @@
   (my-init-theme)
   (set-face-attribute 'default nil :height pvik-default-font-height))
 
-(use-package spaceline
-	:ensure t
-  :config
-	(require 'spaceline-config)
-	(spaceline-emacs-theme)
-	(spaceline-helm-mode)
-	(spaceline-toggle-minor-modes-on)
-  (spaceline-toggle-projectile-root-on)
-  (spaceline-toggle-workspace-number-on)
-  (spaceline-toggle-evil-state-off)
-  (spaceline-toggle-anzu-off)
-  (spaceline-toggle-hud-off))
+;; (use-package spaceline
+;;   :ensure t
+;;   :config
+;;     (require 'spaceline-config)
+;; 	(spaceline-emacs-theme)
+;; 	(spaceline-helm-mode)
+;; 	(spaceline-toggle-minor-modes-off)
+;; 	(spaceline-toggle-version-control-on)
+;; 	(spaceline-toggle-projectile-root-on)
+;; 	(spaceline-toggle-workspace-number-on)
+;; 	(spaceline-toggle-evil-state-off)
+;; 	(spaceline-toggle-anzu-off)
+;; 	(spaceline-toggle-hud-off))
+
+(use-package doom-modeline
+  :ensure t
+  :hook (after-init . doom-modeline-mode))
 
 ;; Which Key
 (use-package which-key
@@ -623,7 +628,8 @@
   :ensure t
   :config
   (global-set-key (kbd "C-x g") 'magit-status)
-  (setq vc-handled-backends (delq 'Git vc-handled-backends)))
+  ;; (setq vc-handled-backends (delq 'Git vc-handled-backends))
+  )
 
 ;; Restclient
 (use-package restclient
@@ -944,7 +950,7 @@
 	("4e10cdf7d030fb41061cf57c74f6ddfc19db8d4af6c8e0723dc77f9922543a3d" "34c99997eaa73d64b1aaa95caca9f0d64229871c200c5254526d0062f8074693" "84da7b37214b4ac095a55518502dfa82633bee74f64daf6e1785322e77516f96" "80365dd15f97396bdc38490390c23337063c8965c4556b8f50937e63b5e9a65c" "b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" default)))
  '(package-selected-packages
    (quote
-	(ob-restclient slime-company slime sql-indent centaur-tabs company-go htmlize dockerfile-mode helm-posframe posframe go-mode company-distel diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package)))
+	(doom-modeline ox-reveal elm-mode ob-restclient slime-company slime sql-indent centaur-tabs company-go htmlize dockerfile-mode helm-posframe posframe go-mode company-distel diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package)))
  '(safe-local-variable-values
    (quote
 	((org-edit-src-content . 0)
