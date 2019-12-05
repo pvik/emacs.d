@@ -16,3 +16,4 @@ private.el
 tramp
 *.jar
 .cache
+ac-comphist.dat
