@@ -561,9 +561,11 @@
 				 (rx "*helm")
 				 (rx " ")
 				 ;; circe buffers, use helm-circe instead
-				 (rx "irc.freenode.net")
+				 ;; (rx "irc.freenode.net")
+				 (rx "#lisp")
 				 (rx "#clojure")
-				 (rx "##java")))
+				 (rx "##java")
+				 (rx "##rust")))
   ;; (setq helm-autoresize-max-height 0)
   (setq helm-autoresize-min-height 20)
   ;; (helm-autoresize-mode t)
@@ -877,7 +879,7 @@
 					 :nickserv-password ,freenode-password
 					 :reduce-lurker-spam t
            :channels (;;"#emacs-circe"
-					  :after-auth "#clojure" "#java" "#lisp")))))
+					  :after-auth "#clojure" "##java" "#lisp" "##rust")))))
 (use-package helm-circe
   :ensure t
   :after (helm circe))
