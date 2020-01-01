@@ -98,9 +98,6 @@
 (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
 
 ;; common lisp
-(load (expand-file-name "~/.quicklisp/slime-helper.el"))
-;; Replace "sbcl" with the path to your implementation
-(setq inferior-lisp-program "/usr/bin/sbcl")
 (use-package slime
   :ensure t
   :config
@@ -117,6 +114,9 @@
   (add-hook 'slime-repl-mode-hook #'rainbow-delimiters-mode)
   (add-hook 'slime-repl-mode-hook #'aggressive-indent-mode)
   (add-hook 'slime-repl-mode-hook #'show-paren-mode))
+(load (expand-file-name "~/.quicklisp/slime-helper.el"))
+;; Replace "sbcl" with the path to your implementation
+(setq inferior-lisp-program "/usr/bin/sbcl")
 
 ;; clojure
 (use-package cider
