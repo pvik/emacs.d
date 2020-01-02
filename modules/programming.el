@@ -103,6 +103,7 @@
 (setq inferior-lisp-program "/usr/bin/sbcl")
 (use-package slime
   :ensure t
+  :bind ("C-x C-z" . slime)
   :config
   (slime-setup '(slime-fancy slime-quicklisp slime-asdf))
   (add-hook 'slime-mode-hook 'turn-on-smartparens-strict-mode)
