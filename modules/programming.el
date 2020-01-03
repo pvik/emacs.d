@@ -103,6 +103,7 @@
 (setq inferior-lisp-program "/usr/bin/sbcl")
 (use-package slime
   :ensure t
+  :bind ("C-x C-z" . slime)
   :config
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (slime-setup '(slime-fancy slime-banner slime-quicklisp slime-asdf))
