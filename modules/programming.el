@@ -104,7 +104,8 @@
 (use-package slime
   :ensure t
   :config
-  (slime-setup '(slime-fancy slime-quicklisp slime-asdf))
+  (setq inferior-lisp-program "/usr/bin/sbcl")
+  (slime-setup '(slime-fancy slime-banner slime-quicklisp slime-asdf))
   (add-hook 'slime-mode-hook 'turn-on-smartparens-strict-mode)
   (add-hook 'slime-mode-hook #'rainbow-delimiters-mode)
   (add-hook 'slime-mode-hook #'aggressive-indent-mode)
