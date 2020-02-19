@@ -144,10 +144,14 @@
 ;; 	    (lambda () (setq next-error-function #'flycheck-next-error-function))))
 (use-package clj-refactor
   :ensure t)
+(use-package flycheck-clj-kondo
+  :ensure t)
 (use-package clojure-mode
   :ensure t
   :after (;paredit
-		  smartparens rainbow-delimiters aggressive-indent cider flycheck-clojure clj-refactor projectile)
+		  smartparens rainbow-delimiters aggressive-indent cider
+					  flycheck-clojure clj-refactor projectile
+					  flycheck-clj-kondo)
   :config
   (setq clojure-align-forms-automatically t)
   ;;:init
@@ -163,6 +167,7 @@
 (add-hook 'clojure-mode-hook #'projectile-mode)
 (add-hook 'clojure-mode-hook #'hl-todo-mode)
 (add-hook 'clojure-mode-hook #'outline-minor-mode)
+(add-hook 'clojure-mode-hook #'flycheck-clj-kondo)
 (add-hook 'clojure-mode-hook (lambda ()
 							   (clj-refactor-mode 1)
 							   (helm-cider-mode 1)
