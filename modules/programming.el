@@ -214,6 +214,8 @@
 
 (use-package rust-mode
   :ensure t
+  :bind
+  (("C-c C-k". compile))
   :config
   (setq rust-format-on-save t)
   (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
