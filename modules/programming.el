@@ -160,6 +160,7 @@
 
 ;;(add-hook 'clojure-mode-hook #'paredit-mode)
 										;(add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+(add-hook 'clojure-mode-hook #'flycheck-clj-kondo)
 (add-hook 'clojure-mode-hook 'turn-on-smartparens-strict-mode)
 (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
@@ -167,7 +168,6 @@
 (add-hook 'clojure-mode-hook #'projectile-mode)
 (add-hook 'clojure-mode-hook #'hl-todo-mode)
 (add-hook 'clojure-mode-hook #'outline-minor-mode)
-(add-hook 'clojure-mode-hook #'flycheck-clj-kondo)
 (add-hook 'clojure-mode-hook (lambda ()
 							   (clj-refactor-mode 1)
 							   (helm-cider-mode 1)
