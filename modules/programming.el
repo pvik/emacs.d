@@ -190,25 +190,107 @@
 (setq erlang-man-root-dir "/usr/lib/erlang/man")
 
 ;; go mode
-(use-package company-go
+
+(use-package lsp-mode
+  :ensure t
+  :commands (lsp lsp-deferred)
+  :hook (go-mode . lsp-deferred)
   :config
-  (setq company-tooltip-limit 20)                      ; bigger popup window
-  (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
-  (setq company-echo-delay 0)                          ; remove annoying blinking
-  (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
+  (lsp-register-custom-settings
+ '(("gopls.completeUnimported" t t)
+   ("gopls.staticcheck" t t))))
+
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+;; Optional - provides fancier overlays.
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode
+  :custom
+  ;; (setq lsp-ui-doc-delay 1)
+  ;; (setq lsp-ui-sideline-delay 2)
+  (lsp-ui-doc-enable nil)
+  (lsp-ui-doc-header nil)
+  (lsp-ui-doc-use-childframe t)
+  ;; (lsp-ui-doc-use-webkit t)
+  (lsp-ui-doc-max-height 120)
+  (lsp-ui-doc-max-height 30)
+  (lsp-ui-sideline-enable nil)
+  (lsp-ui-sideline-ignore-duplicate t)
+  (lsp-ui-sideline-show-symbol t)
+  (lsp-ui-sideline-show-diagnostics nil)
+  (lsp-ui-sideline-show-code-actions t)
+  (lsp-ui-sideline-code-actions-prefix "⟩")
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-sideline-diagnostic-max-line-length 150)
+  (lsp-ui-sideline-delay 1)
+  ;; lsp-ui-imenu
+  (lsp-ui-imenu-enable t)
+  (lsp-ui-imenu-kind-position 'top)
+  ;; lsp-ui-peek
+  (lsp-ui-peek-enable t)
+  (lsp-ui-peek-peek-height 20)
+  (lsp-ui-peek-list-width 50)
+  (lsp-ui-peek-fontify 'on-demand) ;; never, on-demand, or always
+  ;; (mapcar (lambda (f) (set-face-foreground f "dim gray"))
+  ;;         '(lsp-ui-sideline-code-action
+  ;; 			lsp-ui-sideline-current-symbol
+  ;; 			lsp-ui-sideline-symbol
+  ;; 			lsp-ui-sideline-symbol-info))
+  :config
+  (fci-mode 0)
+  ;; (setq lsp-ui-sideline-show-diagnostics t)
+  ;; (setq lsp-ui-sideline-show-hover t)
+  ;; (setq lsp-ui-sideline-show-code-actions t)
+  ;; (setq lsp-ui-sideline-delay 10)
+  ;; (setq lsp-ui-doc-enable nil)
+  ;; (setq lsp-ui-doc-delay 10)
+  :preface
+  (defun ladicle/toggle-lsp-ui-doc ()
+	(interactive)
+	(if lsp-ui-doc-mode
+        (progn
+          (lsp-ui-doc-mode -1)
+          (lsp-ui-doc--hide-frame))
+	  (lsp-ui-doc-mode 1)))
+  :bind
+  ("C-c m"   . lsp-ui-imenu)
+  ("C-c d"   . ladicle/toggle-lsp-ui-doc)
   )
+
+;; company-lsp integrates company mode completion with lsp-mode.
+;; completion-at-point also works out of the box but doesn't support snippets.
+(use-package company-lsp
+  :ensure t
+  :commands company-lsp)
+
+;; (use-package company-go
+;;   :config
+;;   (setq company-tooltip-limit 20)                      ; bigger popup window
+;;   (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
+;;   (setq company-echo-delay 0)                          ; remove annoying blinking
+;;   (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
+;;   )
+
 (use-package go-mode
   :ensure t
   :preface
   (defun my-go-mode-hook ()
 	(go-projectile-set-gopath)
-	(local-set-key (kbd "M-.") 'godef-jump)
-	(local-set-key (kbd "M-*") 'pop-tag-mark))
+	;; (local-set-key (kbd "M-.") 'godef-jump)
+	;; (local-set-key (kbd "M-*") 'pop-tag-mark)
+	)
   :config
+  (add-hook 'go-mode-hook 'lsp-deferred)
   (add-to-list 'exec-path "/home/elric/Work/gocode/bin")
-  (add-hook 'before-save-hook 'gofmt-before-save)
-  (local-set-key (kbd "M-.") 'godef-jump)
-  (local-set-key (kbd "M-*") 'pop-tag-mark)
+  ;; (add-hook 'before-save-hook 'gofmt-before-save)
+  ;; (local-set-key (kbd "M-.") 'godef-jump)
+  ;; (local-set-key (kbd "M-*") 'pop-tag-mark)
   (add-hook 'go-mode-hook 'my-go-mode-hook))
 (use-package go-playground
   :ensure t)
