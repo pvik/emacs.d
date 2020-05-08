@@ -500,6 +500,7 @@
 				 (rx "*magit-")
 				 (rx "*lsp-")
 				 (rx "*gopls*")
+				 (rx "*Ibuffer*")
 				 (rx "*helm")
 				 (rx " ")
 				 ;; circe buffers, use helm-circe instead
