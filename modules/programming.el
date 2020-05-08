@@ -64,20 +64,28 @@
 
 (use-package smartparens
   :ensure t
+  :defer t
   :init
-  (load "smartparens-init")
+  ;; (load "smartparens-init")
   :config
-  (smartparens-global-mode t))
+  (smartparens-global-mode t)
+  ;; emacs-lisp-mode
+  ;;(add-hook 'emacs-lisp-mode-hook #'paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'turn-on-smartparens-strict-mode)
+  (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'emacs-lisp-mode-hook #'show-paren-mode)
+  (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode))
 
 ;; geiser -> chicken scheme
 (use-package geiser
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'scheme-mode-hook 'turn-on-smartparens-strict-mode)
+  (add-hook 'scheme-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'scheme-mode-hook #'show-paren-mode)
+  (add-hook 'scheme-mode-hook #'outline-minor-mode))
 (use-package ac-geiser
   :ensure t)
-(add-hook 'scheme-mode-hook 'turn-on-smartparens-strict-mode)
-(add-hook 'scheme-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'scheme-mode-hook #'show-paren-mode)
-(add-hook 'scheme-mode-hook #'outline-minor-mode)
 
 ;; (use-package paredit
 ;;   :ensure t
@@ -90,15 +98,10 @@
 (use-package aggressive-indent
   :ensure t)
 
-;; emacs-lisp-mode
-;;(add-hook 'emacs-lisp-mode-hook #'paredit-mode)
-(add-hook 'emacs-lisp-mode-hook 'turn-on-smartparens-strict-mode)
-(add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'emacs-lisp-mode-hook #'show-paren-mode)
-(add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
-
 ;; common lisp
-(load (expand-file-name "~/.quicklisp/slime-helper.el"))
+(add-hook 'after-init-hook
+		  (lambda ()
+			(load (expand-file-name "~/.quicklisp/slime-helper.el"))))
 ;; Replace "sbcl" with the path to your implementation
 (setq inferior-lisp-program "/usr/bin/sbcl")
 (use-package slime
@@ -156,30 +159,29 @@
   (setq clojure-align-forms-automatically t)
   ;;:init
   ;;(add-to-list 'company-etags-mode 'clojure-mode)
-  )
+  (add-hook 'clojure-mode-hook #'flycheck-clj-kondo)
+  (add-hook 'clojure-mode-hook 'turn-on-smartparens-strict-mode)
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
+  (add-hook 'clojure-mode-hook #'show-paren-mode)
+  (add-hook 'clojure-mode-hook #'projectile-mode)
+  (add-hook 'clojure-mode-hook #'hl-todo-mode)
+  (add-hook 'clojure-mode-hook #'outline-minor-mode)
+  (add-hook 'clojure-mode-hook (lambda ()
+								 (clj-refactor-mode 1)
+								 (helm-cider-mode 1)
+								 (yas-minor-mode 1) ; for adding require/use/import statements
+								 (cljr-add-keybindings-with-prefix "M-RET")
+								 (pdf-occur-global-minor-mode -1)
+								 (tex-pdf-mode -1)))
+  (add-hook 'cider-repl-mode-hook 'turn-on-smartparens-strict-mode)
+  (add-hook 'cider-repl-mode-hook (lambda ()
+									(helm-cider-mode 1)
+									(pdf-occur-global-minor-mode -1)
+									(tex-pdf-mode -1))))
 
 ;;(add-hook 'clojure-mode-hook #'paredit-mode)
 										;(add-hook 'clojure-mode-hook #'smartparens-strict-mode)
-(add-hook 'clojure-mode-hook #'flycheck-clj-kondo)
-(add-hook 'clojure-mode-hook 'turn-on-smartparens-strict-mode)
-(add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'clojure-mode-hook #'aggressive-indent-mode)
-(add-hook 'clojure-mode-hook #'show-paren-mode)
-(add-hook 'clojure-mode-hook #'projectile-mode)
-(add-hook 'clojure-mode-hook #'hl-todo-mode)
-(add-hook 'clojure-mode-hook #'outline-minor-mode)
-(add-hook 'clojure-mode-hook (lambda ()
-							   (clj-refactor-mode 1)
-							   (helm-cider-mode 1)
-							   (yas-minor-mode 1) ; for adding require/use/import statements
-							   (cljr-add-keybindings-with-prefix "M-RET")
-							   (pdf-occur-global-minor-mode -1)
-							   (tex-pdf-mode -1)))
-(add-hook 'cider-repl-mode-hook 'turn-on-smartparens-strict-mode)
-(add-hook 'cider-repl-mode-hook (lambda ()
-								  (helm-cider-mode 1)
-								  (pdf-occur-global-minor-mode -1)
-								  (tex-pdf-mode -1)))
 
 ;; erlang mode
 
@@ -361,12 +363,11 @@
   (setq web-mode-enable-comment-interpolation t)
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-current-element-highlight t)
-  (setq web-mode-enable-current-column-highlight t))
-
-(add-hook 'web-mode-hook (lambda ()
+  (setq web-mode-enable-current-column-highlight t)
+  (add-hook 'web-mode-hook (lambda ()
 						   (electric-indent-mode -1)
 						   (pdf-occur-global-minor-mode -1)
-						   (tex-pdf-mode -1)))
+						   (tex-pdf-mode -1))))
 
 (use-package css-mode
   :ensure nil

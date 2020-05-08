@@ -5,7 +5,7 @@
 ;;; Code:
 
 ;; turn up GC during startup
-(setq gc-cons-threshold 402653184
+(setq ;; gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
 
 (defvar original--file-name-handler-alist file-name-handler-alist)
@@ -64,14 +64,13 @@
 (setq auto-save-file-name-transforms
       `((".*" "/tmp/" t)))
 
-
 ;; Package configs
 (require 'package)
 (setq package-enable-at-startup nil)
 (setq package-archives
       '(("org"   . "https://orgmode.org/elpa/")
- 			("gnu"   . "https://elpa.gnu.org/packages/")
- 			("melpa" . "https://melpa.org/packages/")))
+		("gnu"   . "https://elpa.gnu.org/packages/")
+		("melpa" . "https://melpa.org/packages/")))
 (package-initialize)
 
 ;; Bootstrap `use-package`
@@ -108,12 +107,12 @@
   (setq projectile-require-project-root nil)
   (setq projectile-completion-system 'helm)
   :config
-	(setq projectile-mode-line
-				'(:eval (if (projectile-project-p)
-										(format "[%s]"
-														(projectile-project-name))
-									"")))
-	(projectile-mode 1))
+  (setq projectile-mode-line
+		'(:eval (if (projectile-project-p)
+					(format "[%s]"
+							(projectile-project-name))
+				  "")))
+  (projectile-mode 1))
 
 ;; Buffers
 
@@ -146,111 +145,111 @@
 ;; Email
 ;; =====
 
-(use-package org-mime
-  :ensure t	)
+;; (use-package org-mime
+;;   :ensure t	)
 
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
-(require 'mu4e)
+;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+;; (require 'mu4e)
 
-;; use mu4e for e-mail in emacs
-(setq mail-user-agent 'mu4e-user-agent)
+;; ;; use mu4e for e-mail in emacs
+;; (setq mail-user-agent 'mu4e-user-agent)
 
-(setq mu4e-maildir (expand-file-name "~/mail/ctl"))
-(setq mu4e-sent-folder "/Sent")
-(setq mu4e-drafts-folder "/Drafts")
-(setq mu4e-trash-folder "/Trash")
-(setq mu4e-inbox-folder "/Inbox")
-;; smtp mail setting; these are the same that `gnus' uses.
-(setq
- ;; authentication details set in ~/.authinfo
-   message-send-mail-function   'smtpmail-send-it
-   smtpmail-default-smtp-server "localhost"
-   smtpmail-smtp-server         "localhost"
-   smtpmail-local-domain        "centurylink.com"
-	 smtpmail-smtp-service        1025)
-;; give me ISO(ish) format date-time stamps in the header list
-(setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
-;;rename files when moving
-;;NEEDED FOR MBSYNC
-(setq mu4e-change-filenames-when-moving t)
-;; don't save messages to Sent Messages, Gmail/IMAP takes care of this
-(setq mu4e-sent-messages-behavior 'delete)
-;; use pandoc for html email, it is much better than the default html2tex
-;; (setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
-;; action to view in the browser:
-(add-to-list 'mu4e-view-actions '("view in browser" . mu4e-action-view-in-browser))
-;; smart refiling
-(setq mu4e-refile-folder
-			(lambda (msg)
-				(cond
-				 ;; report messages go to /auto-reports
-				 ((mu4e-message-contact-field-matches msg :from
-																							"mtb.bridge@centurylink.com")
-					"/auto-reports")
-				 ((mu4e-message-contact-field-matches msg :from
-																							"AR_SCRIPT@centurylink.com")
-					"/auto-reports")
-				 ;; everything else goes to /archive
-				 ;; important to have a catch-all at the end!
-				 (t  "/archive/Inbox"))))
-;; the maildirs you use frequently; access them with 'j' ('jump')
-(setq   mu4e-maildir-shortcuts
-				'(("/Inbox"       . ?i)
-          ("/Sent"        . ?s)))
-;; the headers to show in the headers list -- a pair of a field
-;; and its width, with `nil' meaning 'unlimited'
-(setq mu4e-headers-fields
-			'( (:date          .  25)    ;; alternatively, use :human-date
-				 (:flags         .   6)
-				 (:from          .  22)
-				 (:subject       .  nil))) ;; alternatively, use :thread-subject
-; Program to get mail.
-;; Called when 'U' is pressed in main view, or C-c C-u elsewhere
-;; (setq mu4e-get-mail-command t)
-;; (setq mu4e-update-interval 120)
-;; general emacs mail settings; used when composing e-mail
-;; the non-mu4e-* stuff is inherited from emacs/message-mode
-(setq mu4e-compose-reply-to-address "praveen.vikram@centurylink.com"
-      user-mail-address "praveen.vikram@centurylink.com"
-      user-full-name  "Praveen Vikram")
-(setq mu4e-compose-signature
-			"#+BEGIN_SRC\nThanks,\nPraveen Vikram\n#+END_SRC")
-;; save attachment to my desktop (this can also be a function)
-(setq mu4e-attachment-dir "~/Downloads")
-;; split view # of lines to show in header view
-(setq mu4e-headers-visible-lines 20)
-;; attempt to show images when viewing messages
-(setq mu4e-view-show-images t)
-;; stop editor from inserting line breaks
-;; (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
-(setq org-mime-beautify-quoted-mail t)
-(defun htmlize-before-send ()
-    "When in an org-mu4e-compose-org-mode message, htmlize it."
-    (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
-      (message-mode)
-      (org-mime-htmlize)))
+;; (setq mu4e-maildir (expand-file-name "~/mail/ctl"))
+;; (setq mu4e-sent-folder "/Sent")
+;; (setq mu4e-drafts-folder "/Drafts")
+;; (setq mu4e-trash-folder "/Trash")
+;; (setq mu4e-inbox-folder "/Inbox")
+;; ;; smtp mail setting; these are the same that `gnus' uses.
+;; (setq
+;;  ;; authentication details set in ~/.authinfo
+;;    message-send-mail-function   'smtpmail-send-it
+;;    smtpmail-default-smtp-server "localhost"
+;;    smtpmail-smtp-server         "localhost"
+;;    smtpmail-local-domain        "centurylink.com"
+;; 	 smtpmail-smtp-service        1025)
+;; ;; give me ISO(ish) format date-time stamps in the header list
+;; (setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
+;; ;;rename files when moving
+;; ;;NEEDED FOR MBSYNC
+;; (setq mu4e-change-filenames-when-moving t)
+;; ;; don't save messages to Sent Messages, Gmail/IMAP takes care of this
+;; (setq mu4e-sent-messages-behavior 'delete)
+;; ;; use pandoc for html email, it is much better than the default html2tex
+;; ;; (setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
+;; ;; action to view in the browser:
+;; (add-to-list 'mu4e-view-actions '("view in browser" . mu4e-action-view-in-browser))
+;; ;; smart refiling
+;; (setq mu4e-refile-folder
+;; 			(lambda (msg)
+;; 				(cond
+;; 				 ;; report messages go to /auto-reports
+;; 				 ((mu4e-message-contact-field-matches msg :from
+;; 																							"mtb.bridge@centurylink.com")
+;; 					"/auto-reports")
+;; 				 ((mu4e-message-contact-field-matches msg :from
+;; 																							"AR_SCRIPT@centurylink.com")
+;; 					"/auto-reports")
+;; 				 ;; everything else goes to /archive
+;; 				 ;; important to have a catch-all at the end!
+;; 				 (t  "/archive/Inbox"))))
+;; ;; the maildirs you use frequently; access them with 'j' ('jump')
+;; (setq   mu4e-maildir-shortcuts
+;; 				'(("/Inbox"       . ?i)
+;;           ("/Sent"        . ?s)))
+;; ;; the headers to show in the headers list -- a pair of a field
+;; ;; and its width, with `nil' meaning 'unlimited'
+;; (setq mu4e-headers-fields
+;; 			'( (:date          .  25)    ;; alternatively, use :human-date
+;; 				 (:flags         .   6)
+;; 				 (:from          .  22)
+;; 				 (:subject       .  nil))) ;; alternatively, use :thread-subject
+;; ; Program to get mail.
+;; ;; Called when 'U' is pressed in main view, or C-c C-u elsewhere
+;; ;; (setq mu4e-get-mail-command t)
+;; ;; (setq mu4e-update-interval 120)
+;; ;; general emacs mail settings; used when composing e-mail
+;; ;; the non-mu4e-* stuff is inherited from emacs/message-mode
+;; (setq mu4e-compose-reply-to-address "praveen.vikram@centurylink.com"
+;;       user-mail-address "praveen.vikram@centurylink.com"
+;;       user-full-name  "Praveen Vikram")
+;; (setq mu4e-compose-signature
+;; 			"#+BEGIN_SRC\nThanks,\nPraveen Vikram\n#+END_SRC")
+;; ;; save attachment to my desktop (this can also be a function)
+;; (setq mu4e-attachment-dir "~/Downloads")
+;; ;; split view # of lines to show in header view
+;; (setq mu4e-headers-visible-lines 20)
+;; ;; attempt to show images when viewing messages
+;; (setq mu4e-view-show-images t)
+;; ;; stop editor from inserting line breaks
+;; ;; (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
+;; (setq org-mime-beautify-quoted-mail t)
+;; (defun htmlize-before-send ()
+;;     "When in an org-mu4e-compose-org-mode message, htmlize it."
+;;     (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
+;;       (message-mode)
+;;       (org-mime-htmlize)))
 
-(advice-add 'message-send-and-exit :before 'htmlize-before-send)
+;; (advice-add 'message-send-and-exit :before 'htmlize-before-send)
 
-(add-hook 'mu4e-compose-mode-hook
-    (defun my-do-compose-stuff ()
-       "My settings for message composition."
-       (visual-line-mode)
-       (org-mu4e-compose-org-mode)
-			 (use-hard-newlines -1)))
+;; (add-hook 'mu4e-compose-mode-hook
+;;     (defun my-do-compose-stuff ()
+;;        "My settings for message composition."
+;;        (visual-line-mode)
+;;        (org-mu4e-compose-org-mode)
+;; 			 (use-hard-newlines -1)))
 
-(require 'org-mu4e)
-;; convert org mode to HTML automatically
-(setq org-mu4e-convert-to-html t)
+;; (require 'org-mu4e)
+;; ;; convert org mode to HTML automatically
+;; (setq org-mu4e-convert-to-html t)
 
-;; don't keep message buffers around
-(setq message-kill-buffer-on-exit t)
-;; do not reply to self
-(setq mu4e-compose-dont-reply-to-self t)
-;; do not ask for confirmation on quit
-(setq mu4e-confirm-quit nil)
+;; ;; don't keep message buffers around
+;; (setq message-kill-buffer-on-exit t)
+;; ;; do not reply to self
+;; (setq mu4e-compose-dont-reply-to-self t)
+;; ;; do not ask for confirmation on quit
+;; (setq mu4e-confirm-quit nil)
 
-(global-set-key (kbd "C-<f6>") 'mu4e)
+;; (global-set-key (kbd "C-<f6>") 'mu4e)
 
 ;; https://matt.hackinghistory.ca/2016/11/18/sending-html-mail-with-mu4e/
 ;; https://github.com/djcb/mu/issues/392
@@ -266,17 +265,17 @@
 ;; (add-hook 'mu4e-compose-mode-hook 'insert-mu4e-sig-here)
 
 ;; Notifications
-(use-package mu4e-alert
-  :ensure t
-  :config
-	(mu4e-alert-set-default-style 'libnotify)
-	(add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
-	(add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
-	(setq mu4e-alert-interesting-mail-query
-      (concat
-       "flag:unread"  ;; Unread of mail only in Inbox
-			 " AND maildir:"
-       "\"/Inbox\"")))
+;; (use-package mu4e-alert
+;;   :ensure t
+;;   :config
+;; 	(mu4e-alert-set-default-style 'libnotify)
+;; 	(add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+;; 	(add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+;; 	(setq mu4e-alert-interesting-mail-query
+;;       (concat
+;;        "flag:unread"  ;; Unread of mail only in Inbox
+;; 			 " AND maildir:"
+;;        "\"/Inbox\"")))
 
 ;; =======================================================
 ;; =======================================================
@@ -290,6 +289,7 @@
 
 (use-package unicode-fonts
   :ensure t
+  :defer t
   :config
   (unicode-fonts-setup))
 
@@ -297,64 +297,6 @@
 (use-package all-the-icons
   :ensure t)
 
-;; NeoTree
-(use-package neotree
-  :ensure t
-  :after all-the-icons
-  :init
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-  (global-set-key [f6] 'neotree-toggle))
-
-;; (use-package centaur-tabs
-;;   :demand
-;;   :init
-;;   (defun centaur-tabs-buffer-groups ()
-;; 	"`centaur-tabs-buffer-groups' control buffers' group rules.
-
-;;     Group centaur-tabs with mode if buffer is derived from `eshell-mode' `emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
-;;     All buffer name start with * will group to \"Emacs\".
-;;     Other buffer group by `centaur-tabs-get-group-name' with project name."
-;; 	(list
-;; 	 (cond
-;; 	  ((or (string-equal "*" (substring (buffer-name) 0 1))
-;; 		   (memq major-mode '(magit-process-mode
-;; 							  magit-status-mode
-;; 							  magit-diff-mode
-;; 							  magit-log-mode
-;; 							  magit-file-mode
-;; 							  magit-blob-mode
-;; 							  magit-blame-mode
-;; 							  )))
-;; 	   "Emacs")
-;; 	  ((derived-mode-p 'prog-mode)
-;; 	   "Editing")
-;; 	  ((derived-mode-p 'dired-mode)
-;; 	   "Dired")
-;; 	  ((memq major-mode '(helpful-mode
-;; 						  help-mode))
-;; 	   "Help")
-;; 	  ((memq major-mode '(org-mode
-;; 						  org-agenda-clockreport-mode
-;; 						  org-src-mode
-;; 						  org-agenda-mode
-;; 						  org-beamer-mode
-;; 						  org-indent-mode
-;; 						  org-bullets-mode
-;; 						  org-cdlatex-mode
-;; 						  org-agenda-log-mode
-;; 						  diary-mode))
-;; 	   "OrgMode")
-;; 	  (t
-;; 	   (centaur-tabs-get-group-name (current-buffer))))))
-;;   :hook
-;;   (dired-mode . centaur-tabs-local-mode)
-;;   :config
-;;   (centaur-tabs-mode t)
-;;   (setq centaur-tabs-set-bar 'over)
-;;   (setq centaur-tabs-modified-marker "*")
-;;   :bind
-;;   ("C-S-<iso-lefttab>" . centaur-tabs-backward)
-;;   ("C-<tab>" . centaur-tabs-forward))
 
 ;; theme & modeline
 ;; ========
@@ -467,54 +409,54 @@
 ;;   (shackle-mode))
 
 ;; purpose
-(use-package window-purpose
-  :ensure t
-  :config
-  (require 'window-purpose)
-	;; play well with helm
-	(setq purpose-preferred-prompt 'helm)
-	(define-key purpose-mode-map (kbd "C-x b") nil)
-	(define-key purpose-mode-map (kbd "C-x C-f") nil)
-	(define-key purpose-mode-map (kbd "C-x C-k ,") 'purpose-x-popwin-close-windows)
+;; (use-package window-purpose
+;;   :ensure t
+;;   :config
+;;   (require 'window-purpose)
+;; 	;; play well with helm
+;; 	(setq purpose-preferred-prompt 'helm)
+;; 	(define-key purpose-mode-map (kbd "C-x b") nil)
+;; 	(define-key purpose-mode-map (kbd "C-x C-f") nil)
+;; 	(define-key purpose-mode-map (kbd "C-x C-k ,") 'purpose-x-popwin-close-windows)
 	
-	;; play well with magit
-	(require 'window-purpose-x)
-	(purpose-x-magit-single-on)
+;; 	;; play well with magit
+;; 	(require 'window-purpose-x)
+;; 	(purpose-x-magit-single-on)
 	
-  (purpose-mode)
-  ;; main 
-	(add-to-list 'purpose-user-mode-purposes '(clojure-mode . main))
-	(add-to-list 'purpose-user-mode-purposes '(web-mode . main))
-	(add-to-list 'purpose-user-mode-purposes '(scss-mode . main))
-	(add-to-list 'purpose-user-mode-purposes '(markdown-mode . main))
-	;; repl
-  (add-to-list 'purpose-user-mode-purposes '(cider-repl-mode . repl))
-	;; popups
-	(add-to-list 'purpose-user-name-purposes '("*cider-?*" . popup))
-	(add-to-list 'purpose-user-mode-purposes '(cider-stacktrace-mode . popup))
+;;   (purpose-mode)
+;;   ;; main 
+;; 	(add-to-list 'purpose-user-mode-purposes '(clojure-mode . main))
+;; 	(add-to-list 'purpose-user-mode-purposes '(web-mode . main))
+;; 	(add-to-list 'purpose-user-mode-purposes '(scss-mode . main))
+;; 	(add-to-list 'purpose-user-mode-purposes '(markdown-mode . main))
+;; 	;; repl
+;;   (add-to-list 'purpose-user-mode-purposes '(cider-repl-mode . repl))
+;; 	;; popups
+;; 	(add-to-list 'purpose-user-name-purposes '("*cider-?*" . popup))
+;; 	(add-to-list 'purpose-user-mode-purposes '(cider-stacktrace-mode . popup))
 	
-	(purpose-x-popwin-setup)
-	;;(setq purpose-x-popwin-position 'bottom)
-	;;(setq purpose-x-popwin-height 25)
+;; 	(purpose-x-popwin-setup)
+;; 	;;(setq purpose-x-popwin-position 'bottom)
+;; 	;;(setq purpose-x-popwin-height 25)
 	
-  (purpose-compile-user-configuration))
+;;   (purpose-compile-user-configuration))
 
-;; eyebrowse
-(use-package eyebrowse
-  :ensure t
-  :config
-  (eyebrowse-mode t))
+;; ;; eyebrowse
+;; (use-package eyebrowse
+;;   :ensure t
+;;   :config
+;;   (eyebrowse-mode t))
 
-(use-package windmove
-  :ensure t
-  ;;:init
-  ;;(global-set-key (kbd "C-M-<left>") #'windmove-left)
-  ;;(global-set-key (kbd "C-M-<right>") #'windmove-right)
-  :bind
-  (("M-s-<left>". windmove-left)
-   ("M-s-<right>". windmove-right)
-   ("M-s-<up>". windmove-up)
-   ("M-s-<down>". windmove-down)))
+;; (use-package windmove
+;;   :ensure t
+;;   ;;:init
+;;   ;;(global-set-key (kbd "C-M-<left>") #'windmove-left)
+;;   ;;(global-set-key (kbd "C-M-<right>") #'windmove-right)
+;;   :bind
+;;   (("M-s-<left>". windmove-left)
+;;    ("M-s-<right>". windmove-right)
+;;    ("M-s-<up>". windmove-up)
+;;    ("M-s-<down>". windmove-down)))
 
 ;; =======================================================
 ;; =======================================================
@@ -532,22 +474,20 @@
 
 (use-package helm
   :ensure t
-  :bind (:map helm-map
-							("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
-							("C-i"   . helm-execute-persistent-action) ; make TAB work in terminal
-							("C-z"   . helm-select-action)) ; list actions using C-z
+  :bind (("M-x" . helm-M-x)
+		 ("C-x b" . helm-mini)
+		 ("C-x C-f" . helm-find-files)
+         ("M-<f5>" . helm-find-files)
+         ([f10] . helm-buffers-list)
+         ([S-f10] . helm-recentf)
+		 :map helm-map
+			  ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
+			  ("C-i"   . helm-execute-persistent-action) ; make TAB work in terminal
+			  ("C-z"   . helm-select-action)) ; list actions using C-z
   :init
   (setq helm-mode-fuzzy-match t)
   (setq helm-completion-in-region-fuzzy-match t)
   (setq helm-candidate-number-list 50)
-  ;; (global-unset-key (kbd "C-x b"))
-  (global-set-key (kbd "M-x") #'helm-M-x)
-  (global-set-key (kbd "C-x b") #'helm-mini)
-  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-  (global-set-key (kbd "C-x C-f") #'helm-find-files)
-  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-  ;; (global-set-key (kbd "C-c h") 'helm-command-prefix)
-  (global-set-key (kbd "C-c h o") #'helm-occur)
   (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
 				helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
 				helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
@@ -558,6 +498,7 @@
   (setq helm-boring-buffer-regexp-list
 				(list
 				 (rx "*magit-")
+				 (rx "*lsp-")
 				 (rx "*helm")
 				 (rx " ")
 				 ;; circe buffers, use helm-circe instead
@@ -570,6 +511,14 @@
   (setq helm-autoresize-min-height 20)
   ;; (helm-autoresize-mode t)
   :config
+  ;; (global-unset-key (kbd "C-x b"))
+  (global-set-key (kbd "M-x") #'helm-M-x) 
+  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+  (global-set-key (kbd "C-x b") #'helm-mini)
+  (global-set-key (kbd "C-x C-f") #'helm-find-files)
+  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+  ;; (global-set-key (kbd "C-c h") 'helm-command-prefix)
+  (global-set-key (kbd "C-c h o") #'helm-occur)
   (add-hook 'helm-minibuffer-set-up-hook 'elric//helm-hide-minibuffer-maybe)
   (helm-autoresize-mode 1)
   (helm-mode 1))
@@ -836,11 +785,12 @@
 ;; =====
 ;; browser
 
-(use-package w3m
-  :ensure t
-  :config
-  (setq w3m-search-default-engine "duckduckgo")
-  (setq w3m-default-desplay-inline-images t)) ;; Enable images in w3m
+;; (use-package w3m
+;;   :ensure t
+;;   :config
+;;   (setq w3m-search-default-engine "duckduckgo")
+;;   (setq w3m-default-desplay-inline-images t))
+;; Enable images in w3m
 
 
 ;; =======================================================
@@ -852,6 +802,7 @@
 
 (use-package circe
   :ensure t
+  :defer t
   :preface
   (defun circe-network-connected-p (network)
     "Return non-nil if there's any Circe server-buffer whose `circe-server-netwok' is NETWORK."
@@ -931,9 +882,10 @@
 ;; =======================================================
 
 ;; Reset GC back to normal
-(add-hook! 'emacs-startup-hook
-  (setq gc-cons-threshold 16777216
-        gc-cons-percentage 0.1))
+(add-hook! 'after-init-hook
+  (lambda () 
+	(setq ;gc-cons-threshold 16777216
+	 gc-cons-percentage 0.1)))
 
 (add-hook! 'emacs-startup-hook
   (setq file-name-handler-alist original--file-name-handler-alist))
