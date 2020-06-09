@@ -574,6 +574,7 @@
 
 ;; Programming
 ;; ==========
+(require 'smartparens-init)
 (require 'programming)
 
 ;; magit
