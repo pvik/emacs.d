@@ -202,3 +202,7 @@
       (insert "* ")))
     (let ((o (sp--get-active-overlay)))
       (indent-region (overlay-start o) (overlay-end o)))))
+
+(provide 'smartparens-init)
+
+;;; smartparens-init.el ends here
