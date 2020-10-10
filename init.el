@@ -919,6 +919,15 @@
 (set-face-attribute 'mode-line-inactive nil :height pvik-modeline-inactive-font-height)
 (setq-default line-spacing pvik-line-spacing)
 
+;; frame title to include project name as well
+(setq-default frame-title-format
+    '(""
+      "%b"
+      (:eval
+       (let ((project-name (projectile-project-name)))
+         (unless (string= "-" project-name)
+           (format " in [%s]" project-name))))))
+
 ;;; init.el ends here
 
 ;; (custom-set-faces
