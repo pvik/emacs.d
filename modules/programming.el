@@ -191,16 +191,33 @@
 (setq exec-path (cons "/usr/lib/erlang/bin" exec-path))
 (setq erlang-man-root-dir "/usr/lib/erlang/man")
 
-;; go mode
+;; elixir mode
+
+(use-package elixir-mode
+  :ensure t
+  :config
+  (add-hook 'elixir-mode-hook
+			(lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
+  (add-hook 'elixir-mode-hook #'company-mode))
+
+;; lsp mode (go / elixir)
 
 (use-package lsp-mode
   :ensure t
+  :diminish lsp-mode
   :commands (lsp lsp-deferred)
-  :hook (go-mode . lsp-deferred)
+  :hook
+  (go-mode . lsp-deferred)
+  (elixir-mode . lsp-deferred)
+  :init
+  (add-to-list 'exec-path "/home/elric/Downloads/elixir-ls")
   :config
+  (setq lsp-clients-elixir-server-executable "elixir-ls")
   (lsp-register-custom-settings
  '(("gopls.completeUnimported" t t)
    ("gopls.staticcheck" t t))))
+
+;; go mode
 
 ;; Set up before-save hooks to format buffer and add/delete imports.
 ;; Make sure you don't have other gofmt/goimports hooks enabled.
