@@ -210,7 +210,7 @@
   (go-mode . lsp-deferred)
   (elixir-mode . lsp-deferred)
   :init
-  (add-to-list 'exec-path "/home/elric/Downloads/elixir-ls")
+  ;; (add-to-list 'exec-path "/home/elric/Downloads/elixir-ls")
   :config
   (setq lsp-clients-elixir-server-executable "elixir-ls")
   (lsp-register-custom-settings
