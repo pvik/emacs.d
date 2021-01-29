@@ -87,6 +87,18 @@
 (use-package ac-geiser
   :ensure t)
 
+;; racket
+(use-package racket-mode
+  :ensure t
+  :config
+  (add-hook 'racket-mode-hook 'turn-on-smartparens-strict-mode)
+  (add-hook 'racket-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'racket-mode-hook #'show-paren-mode)
+  (add-hook 'racket-mode-hook #'outline-minor-mode)
+  (add-hook 'racket-mode-hook
+	  (lambda ()
+	    (define-key racket-mode-map (kbd "<f5>") 'racket-run))))
+
 ;; (use-package paredit
 ;;   :ensure t
 ;;   :config
