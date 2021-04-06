@@ -667,7 +667,7 @@
   :defer t
   :preface
   (setq
-   pvik--org-directory "~/Dropbox/org"
+   pvik--org-directory "~/Seafile/My Library/org"
    pvik--notes-file (concat pvik--org-directory "/notes.org")
    pvik--work-notes-file (concat pvik--org-directory "/work.org"))
   (defun pvik--define-org-templates ()

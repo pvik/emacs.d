@@ -1,3 +1,5 @@
+.cask/
+racket-mode/
 .lsp*
 transient/
 url/
