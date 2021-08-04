@@ -224,10 +224,11 @@
   :init
   ;; (add-to-list 'exec-path "/home/elric/Downloads/elixir-ls")
   :config
-  (setq lsp-clients-elixir-server-executable "elixir-ls")
-  (lsp-register-custom-settings
- '(("gopls.completeUnimported" t t)
-   ("gopls.staticcheck" t t))))
+  ;; (setq lsp-clients-elixir-server-executable "elixir-ls")
+  ;;  (lsp-register-custom-settings
+  ;; '(("gopls.completeUnimported" t t)
+  ;;   ("gopls.staticcheck" t t)))
+  )
 
 ;; go mode
 
