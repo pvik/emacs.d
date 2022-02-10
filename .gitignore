@@ -20,3 +20,5 @@ tramp
 *.jar
 .cache
 ac-comphist.dat
+.org-id-locations
+org-roam.db
