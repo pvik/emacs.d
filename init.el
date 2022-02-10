@@ -68,10 +68,15 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (setq package-archives
-      '(("org"   . "https://orgmode.org/elpa/")
-		("gnu"   . "https://elpa.gnu.org/packages/")
-		("melpa" . "https://melpa.org/packages/")))
+      '(("gnu"   . "https://elpa.gnu.org/packages/")
+		("melpa" . "https://melpa.org/packages/")
+		("nongnu" . "https://elpa.nongnu.org/nongnu/")
+		;; ("org"   . "https://orgmode.org/elpa/")
+		))
 (package-initialize)
+;; https://github.com/jwiegley/use-package/issues/319#issuecomment-845214233
+(assq-delete-all 'org package--builtins)
+(assq-delete-all 'org package--builtin-versions)
 
 ;; Bootstrap `use-package`
 (unless (package-installed-p 'use-package)
@@ -662,8 +667,14 @@
 ;;   (pdf-tools-install))
 
 ;; org-mode
+
+(use-package org-contrib
+  :ensure t
+  :pin nongnu)
+
 (use-package org
-  :ensure org-plus-contrib
+  ;; :ensure org-plus-contrib
+  :pin gnu 
   :defer t
   :preface
   (setq
@@ -714,7 +725,7 @@
   (pvik--define-org-templates)
   (setq-default
    org-log-done 'time
-   org-descriptive-links nil
+   ;; org-descriptive-links nil
    org-support-shift-select 'always
    org-startup-folded nil
    org-startup-truncated nil
@@ -739,6 +750,21 @@
 	(not (string= lang "plantuml")))  ; don't ask for plantuml
   (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
   (setq org-html-checkbox-type 'html))
+
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory "~/Dropbox/RoamNotes")
+  (org-roam-complete-everywhere t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+		 ("C-c n f" . org-roam-node-find)
+		 ("C-c n i" . org-roam-node-insert)
+		 :map org-mode-map
+		 ;; ("C-M-i" . completion-at-point-functions)
+		 )
+  :config
+  (org-roam-setup))
+
 (use-package org-src
   :ensure nil
   :after org
@@ -901,11 +927,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(alert-default-style 'libnotify t)
+ '(alert-default-style 'libnotify)
  '(custom-safe-themes
-   '("4e10cdf7d030fb41061cf57c74f6ddfc19db8d4af6c8e0723dc77f9922543a3d" "34c99997eaa73d64b1aaa95caca9f0d64229871c200c5254526d0062f8074693" "84da7b37214b4ac095a55518502dfa82633bee74f64daf6e1785322e77516f96" "80365dd15f97396bdc38490390c23337063c8965c4556b8f50937e63b5e9a65c" "b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" default))
+   '("1d5e33500bc9548f800f9e248b57d1b2a9ecde79cb40c0b1398dec51ee820daf" "234dbb732ef054b109a9e5ee5b499632c63cc24f7c2383a849815dacc1727cb6" "4e10cdf7d030fb41061cf57c74f6ddfc19db8d4af6c8e0723dc77f9922543a3d" "34c99997eaa73d64b1aaa95caca9f0d64229871c200c5254526d0062f8074693" "84da7b37214b4ac095a55518502dfa82633bee74f64daf6e1785322e77516f96" "80365dd15f97396bdc38490390c23337063c8965c4556b8f50937e63b5e9a65c" "b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" default))
  '(package-selected-packages
-   '(racket-mode elixir-mode rainbow-mode company-lsp lsp-ui lsp-mode flycheck-clj-kondo lua-mode merlin tuareg doom-modeline ox-reveal elm-mode ob-restclient slime-company slime sql-indent centaur-tabs company-go htmlize dockerfile-mode helm-posframe posframe go-mode company-distel diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package))
+   '(list-packages-ext org-roam racket-mode elixir-mode rainbow-mode company-lsp lsp-ui lsp-mode flycheck-clj-kondo lua-mode merlin tuareg doom-modeline ox-reveal elm-mode ob-restclient slime-company slime sql-indent centaur-tabs company-go htmlize dockerfile-mode helm-posframe posframe go-mode company-distel diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package))
  '(safe-local-variable-values
    '((org-edit-src-content . 0)
 	 (org-src-preserve-indentation))))
@@ -940,7 +966,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
- '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black")))))
+ '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black"))) t)
+ '(ahs-plugin-default-face ((t (:background "#8795af" :foreground "Black")))))
 ;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
 (require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
 ;; ## end of OPAM user-setup addition for emacs / base ## keep this line
