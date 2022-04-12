@@ -635,7 +635,7 @@
   "Prints the arrays of numbers in one line."
   (let* ((json-encoding-pretty-print
           (and json-encoding-pretty-print
-               (not (loop for x across array always (numberp x)))))
+               (not (cl-loop for x across array always (numberp x)))))
          (json-encoding-separator (if json-encoding-pretty-print "," ", ")))
     (funcall encode array)))
 :config
@@ -968,6 +968,7 @@
  '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
  '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black"))) t)
  '(ahs-plugin-default-face ((t (:background "#8795af" :foreground "Black")))))
+
 ;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
-(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
+;; (require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
 ;; ## end of OPAM user-setup addition for emacs / base ## keep this line
