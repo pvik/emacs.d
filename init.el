@@ -51,11 +51,11 @@
 
 ;; handling auto backups
 (setq
-   backup-by-copying t      ; don't clobber symlinks
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t)       ; use versioned backups
+ backup-by-copying t      ; don't clobber symlinks
+ delete-old-versions t
+ kept-new-versions 6
+ kept-old-versions 2
+ version-control t)       ; use versioned backups
 
 ;; store all backup and autosave files in the tmp dir
 (setq backup-directory-alist
@@ -88,13 +88,13 @@
 ;; Bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
-      (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
-        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-        'silent 'inhibit-cookies)
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
@@ -207,8 +207,8 @@
   "Buffers that cannot be killed.")
 
 (dolist (buffer *protected-buffers*)
-    (with-current-buffer buffer
-      (emacs-lock-mode 'kill)))
+  (with-current-buffer buffer
+    (emacs-lock-mode 'kill)))
 
 ;; (defun my/protected-buffers ()
 ;;   "Protects some buffers from being killed."
@@ -229,7 +229,7 @@
   :ensure t)
 
 (use-package diminish
-	:ensure t)
+  :ensure t)
 
 (column-number-mode 1)
 
@@ -237,15 +237,15 @@
   :ensure t
   :preface
   (defun my-init-theme (&optional _frame)
-		)
+	)
   
   (defun my-reload-theme-in-daemon (frame)
-		(when (or (daemonp) (not (display-graphic-p)))
+	(when (or (daemonp) (not (display-graphic-p)))
       (with-selected-frame frame
-				(run-with-timer 0.1 nil #'my-init-theme))))
+		(run-with-timer 0.1 nil #'my-init-theme))))
   :config
   (setq doom-themes-enable-bold t  ; if nil, bold is universally disabled
-	doom-themes-enable-italic t) ; if nil, italics is universally disabled
+		doom-themes-enable-italic t) ; if nil, italics is universally disabled
   (load-theme 'doom-one t)
   (doom-themes-visual-bell-config) ;; Enable flashing mode-line on errors
   (doom-themes-neotree-config) ;; Enable custom neotree theme (all-the-icons must be installed!)
@@ -307,34 +307,35 @@
 (use-package helm
   :ensure t
   :bind (("M-x" . helm-M-x)
-	 ("C-x b" . helm-mini)
-	 ("C-x C-f" . helm-find-files)
+		 ("C-x b" . helm-mini)
+		 ("C-x C-f" . helm-find-files)
          ("M-<f5>" . helm-find-files)
          ([f10] . helm-buffers-list)
          ([S-f10] . helm-recentf)
-	 :map helm-map
-	 ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
-	 ("C-i"   . helm-execute-persistent-action) ; make TAB work in terminal
-	 ("C-z"   . helm-select-action)) ; list actions using C-z
+		 :map helm-map
+		 ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
+		 ("C-i"   . helm-execute-persistent-action) ; make TAB work in terminal
+		 ("C-z"   . helm-select-action)) ; list actions using C-z
   :init
   (setq helm-mode-fuzzy-match t)
   (setq helm-completion-in-region-fuzzy-match t)
   (setq helm-candidate-number-list 50)
   (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-	helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-	helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-	helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-	helm-ff-file-name-history-use-recentf t
-	helm-echo-input-in-header-line t)
+		helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+		helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+		helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+		helm-ff-file-name-history-use-recentf t
+		helm-echo-input-in-header-line t)
   (add-hook 'helm-minibuffer-set-up-hook 'elric//helm-hide-minibuffer-maybe)
   (setq helm-boring-buffer-regexp-list
-	(list
-	 (rx "*magit-")
-	 (rx "*lsp-")
-	 (rx "*gopls*")
-	 (rx "*Ibuffer*")
-	 (rx "*helm")
-	 (rx " ")))
+		(list
+		 (rx "*magit-")
+		 (rx "*lsp-")
+		 (rx "*gopls*")
+		 (rx "*Ibuffer*")
+		 (rx "*helm")
+		 (rx "*straight-process*")
+         (rx " ")))
   ;; (setq helm-autoresize-max-height 0)
   (setq helm-autoresize-min-height 20)
   ;; (helm-autoresize-mode t)
@@ -388,15 +389,15 @@
 
 ;; Restclient
 (use-package restclient
-	:ensure t)
+  :ensure t)
 (use-package company-restclient
-	:ensure t)
+  :ensure t)
 (use-package ob-restclient
-    :ensure t)
+  :ensure t)
 
 ;; plantuml mode
 (use-package htmlize
-	:ensure t)
+  :ensure t)
 (use-package plantuml-mode
   :ensure t)
 (use-package flycheck-plantuml
@@ -451,7 +452,9 @@
 (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
 
 ;; Desktop
-;;(desktop-save-mode 1)
+(desktop-save-mode 1)
+(setq desktop-path '("~/.emacs.d/cache/"))
+(desktop-read)
 
 ;; Default font
 (set-frame-font "Hack-9")
@@ -461,7 +464,6 @@
 (set-face-attribute 'mode-line          nil :height pvik-modeline-active-font-height) ;; defined in private.el
 (set-face-attribute 'mode-line-inactive nil :height pvik-modeline-inactive-font-height)
 (setq-default line-spacing pvik-line-spacing)
-
 
 ;; garbage collect on focus out
 (add-hook 'focus-out-hook 'garbage-collect)
