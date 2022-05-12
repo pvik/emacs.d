@@ -4,37 +4,36 @@
 
 ;;; Code:
 
-;; turn up GC during startup
-(setq ;; gc-cons-threshold 402653184
-      gc-cons-percentage 0.6)
+;; The default is 800 kilobytes.  Measured in bytes.
+(setq gc-cons-threshold-orig gc-cons-threshold)
+(setq gc-cons-threshold (* 50 1000 1000))
 
-(defvar original--file-name-handler-alist file-name-handler-alist)
-(setq file-name-handler-alist nil)
+;; Profile emacs startup
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "*** Emacs loaded in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 
-;; TODO
-;; code folding - crashes org-mode export
-;; snippets
-;; python mode
-;; remove - shackle & configure purpose
-;; setup hydra
+;; Silence compiler warnings as they can be pretty disruptive
+(setq comp-async-report-warnings-errors nil)
 
-;; (load "~/.emacs.d/doom-core-slim")
+;; Add my library path to load-path
+(push "~/.emacs.d/modules/" load-path)
 (setq load-prefer-newer t) ;; load newer source instead of old bytecode
-(add-to-list 'load-path "~/.emacs.d/modules/")
-(require 'doom-core-slim)
+;;(add-to-list 'load-path "~/.emacs.d/modules/")
 (require 'private)
-;; (require 'tbemail) ;; ThunderBird email mode
-
-;; Display the total loading time in the minibuffer
-(defun display-startup-echo-area-message ()
-  "Display startup echo area message."
-  (message "Initialized in %s" (emacs-init-time)))
+;;; (require 'doom-core-slim)
 
 ;; Minimal UI
 (scroll-bar-mode -1)
 (tool-bar-mode   -1)
 (tooltip-mode    -1)
 (menu-bar-mode   -1)
+
+(setq alert-default-style 'libnotify)
 
 (setq-default
  inhibit-startup-screen t
@@ -64,26 +63,77 @@
 (setq auto-save-file-name-transforms
       `((".*" "/tmp/" t)))
 
-;; Package configs
+;;;
+;; use package
+;;;
+
+;; Initialize package sources
 (require 'package)
-(setq package-enable-at-startup nil)
-(setq package-archives
-      '(("gnu"   . "https://elpa.gnu.org/packages/")
-		("melpa" . "https://melpa.org/packages/")
-		("nongnu" . "https://elpa.nongnu.org/nongnu/")
-		;; ("org"   . "https://orgmode.org/elpa/")
-		))
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ;; ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+
 (package-initialize)
-;; https://github.com/jwiegley/use-package/issues/319#issuecomment-845214233
+(require 'use-package)
+
 (assq-delete-all 'org package--builtins)
 (assq-delete-all 'org package--builtin-versions)
 
-;; Bootstrap `use-package`
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(require 'use-package)
+;;;
+;; straight.el
+;;;
 
+;; Bootstrap straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+      (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+        'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+;; Always use straight to install on systems other than Linux
+(setq straight-use-package-by-default (not (eq system-type 'gnu/linux)))
+
+;; Use straight.el for use-package expressions
+(straight-use-package 'use-package)
+
+;; Load the helper package for commands like `straight-x-clean-unused-repos'
+(require 'straight-x)
+
+;;;
+;; Keep Emacs.d clean
+;;;
+
+;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
+(setq user-emacs-directory (expand-file-name "~/.emacs.d/cache/")
+      url-history-file (expand-file-name "url/history" user-emacs-directory))
+
+;; Use no-littering to automatically set common paths to the new user-emacs-directory
+(use-package no-littering
+  :ensure t)
+
+;; Keep customization settings in a temporary file (thanks Ambrevar!)
+(setq custom-file
+      (if (boundp 'server-socket-dir)
+          (expand-file-name "custom.el" server-socket-dir)
+        (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+(load custom-file t)
+
+;;;
+;; Default use UTF-8
+;;;
+
+(set-default-coding-systems 'utf-8)
+
+;;;
 ;; Navigation
 ;; ==========
 
@@ -105,21 +155,41 @@
 ;; =======================================================
 ;; =======================================================
 
-;; Projectile
+;;;
+;; Packages
+;;;
+
 (use-package projectile
   :ensure t
+  :pin melpa-stable
   :init
-  (setq projectile-require-project-root nil)
-  (setq projectile-completion-system 'helm)
-  :config
-  (setq projectile-mode-line
-		'(:eval (if (projectile-project-p)
-					(format "[%s]"
-							(projectile-project-name))
-				  "")))
-  (projectile-mode 1))
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map)))
 
+;;;
 ;; Buffers
+;;;
+
+;; kill this buffer key bind
+(global-set-key (kbd "C-x C-k .") #'kill-this-buffer)
+
+;; tabs, spaces & indents
+
+;; Enable tabs and set prefered indentation width in spaces
+;; (In this case the indent size is 2-spaces wide)
+(setq-default indent-tabs-mode t)
+(setq-default standard-indent 4)
+(setq-default tab-width 4)
+
+;; Make the backspace properly erase the tab instead of
+;; removing 1 space at a time.
+(setq backward-delete-char-untabify-method 'hungry)
+
+;; linum mode for all files
+(add-hook 'text-mode-hook 'linum-mode)
+(add-hook 'prog-mode-hook 'linum-mode)
 
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer))
@@ -136,165 +206,21 @@
 (defvar *protected-buffers* '("*scratch*" "*Messages*")
   "Buffers that cannot be killed.")
 
-(defun my/protected-buffers ()
-  "Protects some buffers from being killed."
-  (dolist (buffer *protected-buffers*)
+(dolist (buffer *protected-buffers*)
     (with-current-buffer buffer
-      (emacs-lock-mode 'kill))))
+      (emacs-lock-mode 'kill)))
 
-(add-hook 'after-init-hook #'my/protected-buffers)
+;; (defun my/protected-buffers ()
+;;   "Protects some buffers from being killed."
+;;   (dolist (buffer *protected-buffers*)
+;;     (with-current-buffer buffer
+;;       (emacs-lock-mode 'kill))))
 
-;; =======================================================
-;; =======================================================
-
-;; Email
-;; =====
-
-;; (use-package org-mime
-;;   :ensure t	)
-
-;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
-;; (require 'mu4e)
-
-;; ;; use mu4e for e-mail in emacs
-;; (setq mail-user-agent 'mu4e-user-agent)
-
-;; (setq mu4e-maildir (expand-file-name "~/mail/ctl"))
-;; (setq mu4e-sent-folder "/Sent")
-;; (setq mu4e-drafts-folder "/Drafts")
-;; (setq mu4e-trash-folder "/Trash")
-;; (setq mu4e-inbox-folder "/Inbox")
-;; ;; smtp mail setting; these are the same that `gnus' uses.
-;; (setq
-;;  ;; authentication details set in ~/.authinfo
-;;    message-send-mail-function   'smtpmail-send-it
-;;    smtpmail-default-smtp-server "localhost"
-;;    smtpmail-smtp-server         "localhost"
-;;    smtpmail-local-domain        "centurylink.com"
-;; 	 smtpmail-smtp-service        1025)
-;; ;; give me ISO(ish) format date-time stamps in the header list
-;; (setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
-;; ;;rename files when moving
-;; ;;NEEDED FOR MBSYNC
-;; (setq mu4e-change-filenames-when-moving t)
-;; ;; don't save messages to Sent Messages, Gmail/IMAP takes care of this
-;; (setq mu4e-sent-messages-behavior 'delete)
-;; ;; use pandoc for html email, it is much better than the default html2tex
-;; ;; (setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
-;; ;; action to view in the browser:
-;; (add-to-list 'mu4e-view-actions '("view in browser" . mu4e-action-view-in-browser))
-;; ;; smart refiling
-;; (setq mu4e-refile-folder
-;; 			(lambda (msg)
-;; 				(cond
-;; 				 ;; report messages go to /auto-reports
-;; 				 ((mu4e-message-contact-field-matches msg :from
-;; 																							"mtb.bridge@centurylink.com")
-;; 					"/auto-reports")
-;; 				 ((mu4e-message-contact-field-matches msg :from
-;; 																							"AR_SCRIPT@centurylink.com")
-;; 					"/auto-reports")
-;; 				 ;; everything else goes to /archive
-;; 				 ;; important to have a catch-all at the end!
-;; 				 (t  "/archive/Inbox"))))
-;; ;; the maildirs you use frequently; access them with 'j' ('jump')
-;; (setq   mu4e-maildir-shortcuts
-;; 				'(("/Inbox"       . ?i)
-;;           ("/Sent"        . ?s)))
-;; ;; the headers to show in the headers list -- a pair of a field
-;; ;; and its width, with `nil' meaning 'unlimited'
-;; (setq mu4e-headers-fields
-;; 			'( (:date          .  25)    ;; alternatively, use :human-date
-;; 				 (:flags         .   6)
-;; 				 (:from          .  22)
-;; 				 (:subject       .  nil))) ;; alternatively, use :thread-subject
-;; ; Program to get mail.
-;; ;; Called when 'U' is pressed in main view, or C-c C-u elsewhere
-;; ;; (setq mu4e-get-mail-command t)
-;; ;; (setq mu4e-update-interval 120)
-;; ;; general emacs mail settings; used when composing e-mail
-;; ;; the non-mu4e-* stuff is inherited from emacs/message-mode
-;; (setq mu4e-compose-reply-to-address "praveen.vikram@centurylink.com"
-;;       user-mail-address "praveen.vikram@centurylink.com"
-;;       user-full-name  "Praveen Vikram")
-;; (setq mu4e-compose-signature
-;; 			"#+BEGIN_SRC\nThanks,\nPraveen Vikram\n#+END_SRC")
-;; ;; save attachment to my desktop (this can also be a function)
-;; (setq mu4e-attachment-dir "~/Downloads")
-;; ;; split view # of lines to show in header view
-;; (setq mu4e-headers-visible-lines 20)
-;; ;; attempt to show images when viewing messages
-;; (setq mu4e-view-show-images t)
-;; ;; stop editor from inserting line breaks
-;; ;; (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
-;; (setq org-mime-beautify-quoted-mail t)
-;; (defun htmlize-before-send ()
-;;     "When in an org-mu4e-compose-org-mode message, htmlize it."
-;;     (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
-;;       (message-mode)
-;;       (org-mime-htmlize)))
-
-;; (advice-add 'message-send-and-exit :before 'htmlize-before-send)
-
-;; (add-hook 'mu4e-compose-mode-hook
-;;     (defun my-do-compose-stuff ()
-;;        "My settings for message composition."
-;;        (visual-line-mode)
-;;        (org-mu4e-compose-org-mode)
-;; 			 (use-hard-newlines -1)))
-
-;; (require 'org-mu4e)
-;; ;; convert org mode to HTML automatically
-;; (setq org-mu4e-convert-to-html t)
-
-;; ;; don't keep message buffers around
-;; (setq message-kill-buffer-on-exit t)
-;; ;; do not reply to self
-;; (setq mu4e-compose-dont-reply-to-self t)
-;; ;; do not ask for confirmation on quit
-;; (setq mu4e-confirm-quit nil)
-
-;; (global-set-key (kbd "C-<f6>") 'mu4e)
-
-;; https://matt.hackinghistory.ca/2016/11/18/sending-html-mail-with-mu4e/
-;; https://github.com/djcb/mu/issues/392
-
-;; handle signature
-;;  (defun insert-mu4e-sig-here ()
-;;     "Insert the mu4e signature here, assuming it is a string."
-;;     (interactive)
-;;     (save-excursion
-;;       (when (stringp mu4e-compose-signature)
-;;         (insert mu4e-compose-signature))))
-
-;; (add-hook 'mu4e-compose-mode-hook 'insert-mu4e-sig-here)
-
-;; Notifications
-;; (use-package mu4e-alert
-;;   :ensure t
-;;   :config
-;; 	(mu4e-alert-set-default-style 'libnotify)
-;; 	(add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
-;; 	(add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
-;; 	(setq mu4e-alert-interesting-mail-query
-;;       (concat
-;;        "flag:unread"  ;; Unread of mail only in Inbox
-;; 			 " AND maildir:"
-;;        "\"/Inbox\"")))
-
-;; =======================================================
-;; =======================================================
-
-;; User Interface
-;; ==============
-
-(use-package alert
-  :defer 1
-  :custom (alert-default-style 'libnotify))
+;; (add-hook 'after-init-hook #'my/protected-buffers)
 
 (use-package unicode-fonts
   :ensure t
-  :defer t
+  ;;:defer t
   :config
   (unicode-fonts-setup))
 
@@ -302,9 +228,6 @@
 (use-package all-the-icons
   :ensure t)
 
-
-;; theme & modeline
-;; ========
 (use-package diminish
 	:ensure t)
 
@@ -314,159 +237,63 @@
   :ensure t
   :preface
   (defun my-init-theme (&optional _frame)
-		(load-theme 'doom-one t)
-		(doom-themes-visual-bell-config) ;; Enable flashing mode-line on errors
-		(doom-themes-neotree-config) ;; Enable custom neotree theme (all-the-icons must be installed!)
-		(doom-themes-org-config) ;; Corrects (and improves) org-mode's native fontification.
-		(let ((line (face-attribute 'mode-line :underline)))
-			(set-face-attribute 'mode-line          nil :overline   line)
-			(set-face-attribute 'mode-line-inactive nil :overline   line)
-			(set-face-attribute 'mode-line-inactive nil :underline  line)
-			(set-face-attribute 'mode-line          nil :box        nil)
-			(set-face-attribute 'mode-line-inactive nil :box        nil)
-			(set-face-attribute 'mode-line          nil :height     pvik-modeline-active-font-height) ;; defined in private.el
-			(set-face-attribute 'mode-line-inactive nil :height     pvik-modeline-inactive-font-height)
-			;; (set-face-attribute 'mode-line          nil :foreground "#bbc2cf")
-			;; (set-face-attribute 'mode-line          nil :background "#2257A0")
-			;; (set-face-attribute 'mode-line-inactive nil :background "#21242b")
-			)
-		(set-face-attribute 'default nil :height pvik-default-font-height)
-		(diminish 'flycheck-mode)
-		(diminish 'purpose-mode)
-		(diminish 'flyspell-mode)
-		(diminish 'company-mode)
-		(diminish 'yas-minor-mode)
-		(diminish 'which-key-mode)
-		(diminish 'helm-mode)
-		(diminish 'eldoc-mode)
-		(diminish 'smartparens-mode)
-		(diminish 'outline-minor-mode)
-		(diminish 'abbrev-mode)
-		(diminish 'auto-revert-mode)
-		(diminish 'auto-highlight-symbol-mode)
-		(diminish 'aggressive-indent-mode)
-		(diminish 'clj-refactor-mode))
+		)
   
   (defun my-reload-theme-in-daemon (frame)
 		(when (or (daemonp) (not (display-graphic-p)))
       (with-selected-frame frame
 				(run-with-timer 0.1 nil #'my-init-theme))))
-  :init
-  (setq doom-themes-enable-bold t  ; if nil, bold is universally disabled
-				doom-themes-enable-italic t) ; if nil, italics is universally disabled
   :config
-  (add-hook 'after-make-frame-functions #'my-init-theme)
-  (add-hook 'after-make-frame-functions #'my-reload-theme-in-daemon)
-	
-  ;; for GUI sessions
-  (my-init-theme)
-  (set-face-attribute 'default nil :height pvik-default-font-height))
+  (setq doom-themes-enable-bold t  ; if nil, bold is universally disabled
+	doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-one t)
+  (doom-themes-visual-bell-config) ;; Enable flashing mode-line on errors
+  (doom-themes-neotree-config) ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-org-config) ;; Corrects (and improves) org-mode's native fontification.
+  (let ((line (face-attribute 'mode-line :underline)))
+    (set-face-attribute 'mode-line          nil :overline   line)
+    (set-face-attribute 'mode-line-inactive nil :overline   line)
+    (set-face-attribute 'mode-line-inactive nil :underline  line)
+    (set-face-attribute 'mode-line          nil :box        nil)
+    (set-face-attribute 'mode-line-inactive nil :box        nil)
+    (set-face-attribute 'mode-line          nil :height     pvik-modeline-active-font-height) ;; defined in private.el
+    (set-face-attribute 'mode-line-inactive nil :height     pvik-modeline-inactive-font-height)
+    ;; (set-face-attribute 'mode-line          nil :foreground "#bbc2cf")
+    ;; (set-face-attribute 'mode-line          nil :background "#2257A0")
+    ;; (set-face-attribute 'mode-line-inactive nil :background "#21242b")
+    )
+  (set-face-attribute 'default nil :height pvik-default-font-height)
+  (diminish 'flycheck-mode)
+  (diminish 'purpose-mode)
+  (diminish 'flyspell-mode)
+  (diminish 'company-mode)
+  (diminish 'yas-minor-mode)
+  (diminish 'which-key-mode)
+  (diminish 'helm-mode)
+  (diminish 'eldoc-mode)
+  (diminish 'smartparens-mode)
+  (diminish 'outline-minor-mode)
+  (diminish 'abbrev-mode)
+  (diminish 'auto-revert-mode)
+  (diminish 'auto-highlight-symbol-mode)
+  (diminish 'aggressive-indent-mode)
+  (diminish 'clj-refactor-mode)
 
-;; (use-package spaceline
-;;   :ensure t
-;;   :config
-;;     (require 'spaceline-config)
-;; 	(spaceline-emacs-theme)
-;; 	(spaceline-helm-mode)
-;; 	(spaceline-toggle-minor-modes-off)
-;; 	(spaceline-toggle-version-control-on)
-;; 	(spaceline-toggle-projectile-root-on)
-;; 	(spaceline-toggle-workspace-number-on)
-;; 	(spaceline-toggle-evil-state-off)
-;; 	(spaceline-toggle-anzu-off)
-;; 	(spaceline-toggle-hud-off))
+  ;; (add-hook 'after-make-frame-functions #'my-init-theme)
+  ;; (add-hook 'after-make-frame-functions #'my-reload-theme-in-daemon)
+  
+  ;; for GUI sessions
+  ;; (my-init-theme)
+  (set-face-attribute 'default nil :height pvik-default-font-height))
 
 (use-package doom-modeline
   :ensure t
   :hook (after-init . doom-modeline-mode))
 
-;; Which Key
-(use-package which-key
-  :ensure t
-  :init
-  ;; (setq which-key-popup-type 'side-window)
-  ;; (setq which-key-separator " ")
-  ;; (setq which-key-prefix-prefix "+")
-  :config
-  (which-key-setup-side-window-bottom)
-  (which-key-mode 1))
-
-;; Window/Buffer management
-;; ========================
-
-;; kill this buffer key bind
-(global-set-key (kbd "C-x C-k .") #'kill-this-buffer)
-
-;; Shackle
-;; (use-package shackle
-;;   :ensure t
-;;   :after helm
-;;   :config
-;;   (setq helm-display-function 'pop-to-buffer) ; make helm play nice
-;;   (setq shackle-rules '(("*help*" :popup t :align below :ratio 0.2)
-;; 												("*helm-mini*" :popup t :align left :ratio 0.4)
-;; 												;;("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)
-;; 												("*cider-doc*" :popup t :align below :ratio 0.2)
-;; 												("*cider-error*" :popup t :align below :ratio 0.35)
-;; 												("\*cider-repl" :regexp t :popup t :align right :ratio 0.3 :inhibit-window-quit t)
-;; 												("\*cljr" :regexp t :popup t :align below :ratio 0.35)))
-;;   (setq shackle-lighter "")
-;;   (shackle-mode))
-
-;; purpose
-;; (use-package window-purpose
-;;   :ensure t
-;;   :config
-;;   (require 'window-purpose)
-;; 	;; play well with helm
-;; 	(setq purpose-preferred-prompt 'helm)
-;; 	(define-key purpose-mode-map (kbd "C-x b") nil)
-;; 	(define-key purpose-mode-map (kbd "C-x C-f") nil)
-;; 	(define-key purpose-mode-map (kbd "C-x C-k ,") 'purpose-x-popwin-close-windows)
-	
-;; 	;; play well with magit
-;; 	(require 'window-purpose-x)
-;; 	(purpose-x-magit-single-on)
-	
-;;   (purpose-mode)
-;;   ;; main 
-;; 	(add-to-list 'purpose-user-mode-purposes '(clojure-mode . main))
-;; 	(add-to-list 'purpose-user-mode-purposes '(web-mode . main))
-;; 	(add-to-list 'purpose-user-mode-purposes '(scss-mode . main))
-;; 	(add-to-list 'purpose-user-mode-purposes '(markdown-mode . main))
-;; 	;; repl
-;;   (add-to-list 'purpose-user-mode-purposes '(cider-repl-mode . repl))
-;; 	;; popups
-;; 	(add-to-list 'purpose-user-name-purposes '("*cider-?*" . popup))
-;; 	(add-to-list 'purpose-user-mode-purposes '(cider-stacktrace-mode . popup))
-	
-;; 	(purpose-x-popwin-setup)
-;; 	;;(setq purpose-x-popwin-position 'bottom)
-;; 	;;(setq purpose-x-popwin-height 25)
-	
-;;   (purpose-compile-user-configuration))
-
-;; ;; eyebrowse
-;; (use-package eyebrowse
-;;   :ensure t
-;;   :config
-;;   (eyebrowse-mode t))
-
-;; (use-package windmove
-;;   :ensure t
-;;   ;;:init
-;;   ;;(global-set-key (kbd "C-M-<left>") #'windmove-left)
-;;   ;;(global-set-key (kbd "C-M-<right>") #'windmove-right)
-;;   :bind
-;;   (("M-s-<left>". windmove-left)
-;;    ("M-s-<right>". windmove-right)
-;;    ("M-s-<up>". windmove-up)
-;;    ("M-s-<down>". windmove-down)))
-
-;; =======================================================
-;; =======================================================
-
+;;;
 ;; Helm
+;;;
+
 (defun elric//helm-hide-minibuffer-maybe ()
   "Hide minibuffer in Helm session if we use the header line as input field."
   (when (with-helm-buffer helm-echo-input-in-header-line)
@@ -480,40 +307,34 @@
 (use-package helm
   :ensure t
   :bind (("M-x" . helm-M-x)
-		 ("C-x b" . helm-mini)
-		 ("C-x C-f" . helm-find-files)
+	 ("C-x b" . helm-mini)
+	 ("C-x C-f" . helm-find-files)
          ("M-<f5>" . helm-find-files)
          ([f10] . helm-buffers-list)
          ([S-f10] . helm-recentf)
-		 :map helm-map
-			  ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
-			  ("C-i"   . helm-execute-persistent-action) ; make TAB work in terminal
-			  ("C-z"   . helm-select-action)) ; list actions using C-z
+	 :map helm-map
+	 ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
+	 ("C-i"   . helm-execute-persistent-action) ; make TAB work in terminal
+	 ("C-z"   . helm-select-action)) ; list actions using C-z
   :init
   (setq helm-mode-fuzzy-match t)
   (setq helm-completion-in-region-fuzzy-match t)
   (setq helm-candidate-number-list 50)
   (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-				helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-				helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-				helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-				helm-ff-file-name-history-use-recentf t
-				helm-echo-input-in-header-line t)
+	helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+	helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+	helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+	helm-ff-file-name-history-use-recentf t
+	helm-echo-input-in-header-line t)
   (add-hook 'helm-minibuffer-set-up-hook 'elric//helm-hide-minibuffer-maybe)
   (setq helm-boring-buffer-regexp-list
-				(list
-				 (rx "*magit-")
-				 (rx "*lsp-")
-				 (rx "*gopls*")
-				 (rx "*Ibuffer*")
-				 (rx "*helm")
-				 (rx " ")
-				 ;; circe buffers, use helm-circe instead
-				 ;; (rx "irc.freenode.net")
-				 (rx "#lisp")
-				 (rx "#clojure")
-				 (rx "##java")
-				 (rx "##rust")))
+	(list
+	 (rx "*magit-")
+	 (rx "*lsp-")
+	 (rx "*gopls*")
+	 (rx "*Ibuffer*")
+	 (rx "*helm")
+	 (rx " ")))
   ;; (setq helm-autoresize-max-height 0)
   (setq helm-autoresize-min-height 20)
   ;; (helm-autoresize-mode t)
@@ -541,46 +362,16 @@
   (helm-projectile-on))
 
 ;; helm-tramp
-(use-package helm-tramp
-  :ensure t
-  :config
-  (add-hook 'helm-tramp-pre-command-hook (lambda () (global-aggressive-indent-mode 0)
-					    (projectile-mode 0)))
-  (add-hook 'helm-tramp-quit-hook (lambda () (global-aggressive-indent-mode 1)
-				     (projectile-mode 1))))
+;; (use-package helm-tramp
+;;   :ensure t
+;;   :config
+;;   (add-hook 'helm-tramp-pre-command-hook (lambda () (global-aggressive-indent-mode 0)
+;; 					    (projectile-mode 0)))
+;;   (add-hook 'helm-tramp-quit-hook (lambda () (global-aggressive-indent-mode 1)
+;; 				     (projectile-mode 1))))
 
 (use-package exec-path-from-shell
   :ensure t)
-
-;; =======================================================
-;; =======================================================
-
-;; tabs, spaces & indents
-;; ======================
-
-;; Enable tabs and set prefered indentation width in spaces
-;; (In this case the indent size is 2-spaces wide)
-(setq-default indent-tabs-mode t)
-(setq-default standard-indent 4)
-(setq-default tab-width 4)
-
-;; Make the backspace properly erase the tab instead of
-;; removing 1 space at a time.
-(setq backward-delete-char-untabify-method 'hungry)
-
-;; Visualize tabs as a pipe character - "|"
-;; This will also show trailing characters as they are useful to spot.
-;; (setq whitespace-style '(face tabs tab-mark trailing))
-;; (custom-set-faces
-;;  '(whitespace-tab ((t (:foreground "#636363")))))
-;; (setq whitespace-display-mappings
-;;       '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
-;; (global-whitespace-mode) ; Enable whitespace mode everywhere
-
-;; Programming
-;; ==========
-(require 'smartparens-init)
-(require 'programming)
 
 ;; magit
 (use-package magit
@@ -589,6 +380,11 @@
   (global-set-key (kbd "C-x g") 'magit-status)
   ;; (setq vc-handled-backends (delq 'Git vc-handled-backends))
   )
+
+;; Programming
+;; ==========
+
+(require 'programming)
 
 ;; Restclient
 (use-package restclient
@@ -606,182 +402,27 @@
 (use-package flycheck-plantuml
   :ensure t)
 
-;; LaTeX
-;; =====
-;; TODO: BibTex
-
-(load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
-
-(use-package company-auctex
-  :ensure t
-  :after company)
-
-(add-hook! (latex-mode LaTeX-mode) 'turn-on-auto-fill)
-(add-hook! LaTeX-mode '(LaTeX-math-mode TeX-source-correlate-mode))
-
 ;; Data modes
 ;; ==========
 
 (use-package json-mode
-  :mode "\\.json\\'"
-  :hook (before-save . my/json-mode-before-save-hook)
-  :preface
-  (defun my/json-mode-before-save-hook ()
-    (when (eq major-mode 'json-mode)
-      (json-pretty-print-buffer))))
-
-(defun my/json-array-of-numbers-on-one-line (encode array)
-  "Prints the arrays of numbers in one line."
-  (let* ((json-encoding-pretty-print
-          (and json-encoding-pretty-print
-               (not (cl-loop for x across array always (numberp x)))))
-         (json-encoding-separator (if json-encoding-pretty-print "," ", ")))
-    (funcall encode array)))
-:config
-(advice-add 'json-encode-array :around #'my/json-array-of-numbers-on-one-line)
+  :mode "\\.json\\'")
 
 ;; (use-package nxml
 ;;   :ensure t)
 (use-package toml-mode
-  :ensure t)
+  :ensure t
+  :mode "\\.toml\\'")
 (use-package yaml-mode
-  :ensure t)
+  :ensure t
+  :mode "\\.yaml\\'")
 
 ;; CSV
 (use-package csv-mode
   :ensure t
+  :mode "\\.csv\\'"
   :config
   (setq-default csv-align-padding 2))
-
-;; =======================================================
-;; =======================================================
-
-;; Text Editing & Regular usage
-;; ============ = =============
-
-;; pdf tools
-;; (use-package pdf-tools
-;;   :ensure t
-;;   :config
-;;   (pdf-tools-install))
-
-;; org-mode
-
-(use-package org-contrib
-  :ensure t
-  :pin nongnu)
-
-(use-package org
-  ;; :ensure org-plus-contrib
-  :pin gnu 
-  :defer t
-  :preface
-  (setq
-   pvik--org-directory "~/Seafile/My Library/org"
-   pvik--notes-file (concat pvik--org-directory "/notes.org")
-   pvik--work-notes-file (concat pvik--org-directory "/work.org"))
-  (defun pvik--define-org-templates ()
-    "Org capture tamplates."
-    (setq org-capture-templates
-					`(("t" "Todo" entry
-						 (file+headline pvik--notes-file "Pending")
-						 "* TODO %?  %U" :empty-lines 1)
-						("n" "Note" entry
-						 (file+headline pvik--notes-file "Notes")
-						 "* NOTE %?\n  %U" :empty-lines 1)
-						("w" "Work Todo" entry
-						 (file+headline pvik--work-notes-file "Pending")
-						 "* TODO %? %U" :empty-lines 1)
-						("W" "Work Note" entry
-						 (file+headline pvik--work-notes-file "Notes")
-						 "* NOTE %?\n  %U" :empty-lines 1)
-						("p" "Project Todo" entry
-						 (file+headline ,(concat (projectile-project-root) "notes.org") "Pending")
-						 "* TODO %?  %U\n%a" :empty-lines 1)
-						("P" "Project Note" entry
-						 (file+headline ,(concat (projectile-project-root) "notes.org") "Notes")
-						 "* NOTE %?\n  %U\n%a" :empty-lines 1))))
-  (defun pvik--org-capture ()
-    "Org-capture to FILE-TO-CAPTURE."
-    (interactive)
-    (pvik--define-org-templates)
-    (org-capture))
-  (defun pvik--org-open-notes ()
-    (interactive)
-    (find-file pvik--notes-file))
-  (defun pvik--org-open-work-notes ()
-    (interactive)
-    (find-file pvik--work-notes-file))
-  (defun pvik--org-open-project-notes ()
-    (interactive)
-    (find-file (concat (projectile-project-root) "notes.org")))
-  :mode
-  ("\\.org$" . org-mode)
-  :hook
-  ((org-mode . org-sticky-header-mode)
-   (org-mode . toc-org-enable))
-  :config
-  (pvik--define-org-templates)
-  (setq-default
-   org-log-done 'time
-   ;; org-descriptive-links nil
-   org-support-shift-select 'always
-   org-startup-folded nil
-   org-startup-truncated nil
-   org-directory (symbol-value 'pvik--org-directory)
-   org-default-notes-file (symbol-value 'pvik--notes-file)) ;; More org-customization in pvik-core
-  (global-set-key (kbd "C-c o c") #'pvik--org-capture)
-  (global-set-key (kbd "C-c o r") #'org-refile)
-  (global-set-key (kbd "C-c o o n") #'pvik--org-open-notes)
-  (global-set-key (kbd "C-c o o w") #'pvik--org-open-work-notes)
-  (global-set-key (kbd "C-c o o p") #'pvik--org-open-project-notes)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '(;; other Babel languages
-	 (plantuml . t)
-	 (restclient . t)
-	 (python . t)
-	 (shell . t)
-	 (clojure . t)))
-  (setq org-plantuml-jar-path
-		(expand-file-name "~/.emacs.d/plantuml.jar"))
-  (defun my-org-confirm-babel-evaluate (lang body)
-	(not (string= lang "plantuml")))  ; don't ask for plantuml
-  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
-  (setq org-html-checkbox-type 'html))
-
-(use-package org-roam
-  :ensure t
-  :custom
-  (org-roam-directory "~/Seafile/My Library/RoamNotes")
-  (org-roam-complete-everywhere t)
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-		 ("C-c n f" . org-roam-node-find)
-		 ("C-c n i" . org-roam-node-insert)
-		 :map org-mode-map
-		 ;; ("C-M-i" . completion-at-point-functions)
-		 )
-  :config
-  (org-roam-setup))
-
-(use-package org-src
-  :ensure nil
-  :after org
-  :config
-  (setq-default
-   org-edit-src-content-indentation 0
-   org-edit-src-persistent-message nil
-   org-src-window-setup 'current-window))
-(use-package org-sticky-header
-  :ensure t
-  :config
-  (setq-default
-   org-sticky-header-full-path 'full
-   org-sticky-header-outline-path-separator " / "))
-(use-package toc-org
-  :ensure t
-  :after org)
 
 ;; markdown mode
 (use-package markdown-mode
@@ -798,95 +439,7 @@
 (use-package markdown-toc
   :ensure t)
 
-;; artist mode
-(add-hook 'artist-mode-hook
-					(lambda ()
-						(local-set-key (kbd "<f1>") 'org-mode)
-						(local-set-key (kbd "<f2>") 'artist-select-op-pen-line) ; f2 = pen mode
-            (local-set-key (kbd "<f3>") 'artist-select-op-line)     ; f3 = line
-						(local-set-key (kbd "<f4>") 'artist-select-op-square)   ; f4 = rectangle
-						(local-set-key (kbd "<f5>") 'artist-select-op-ellipse))); f5 = ellipse
-
-;; =======================================================
-;; =======================================================
-
-;; w3m
-;; =====
-;; browser
-
-;; (use-package w3m
-;;   :ensure t
-;;   :config
-;;   (setq w3m-search-default-engine "duckduckgo")
-;;   (setq w3m-default-desplay-inline-images t))
-;; Enable images in w3m
-
-
-;; =======================================================
-;; =======================================================
-
-;; Circe
-;; =====
-;; IRC Client configuration
-
-(use-package circe
-  :ensure t
-  :defer t
-  :preface
-  (defun circe-network-connected-p (network)
-    "Return non-nil if there's any Circe server-buffer whose `circe-server-netwok' is NETWORK."
-    (catch 'return
-      (dolist (buffer (circe-server-buffers))
-				(with-current-buffer buffer
-          (if (string= network circe-server-network)
-              (throw 'return t))))))
-  (defun circe-maybe-connect (network)
-    "Connect to NETWORK, but ask user for confirmation if it's already been connected to."
-    (interactive "sNetwork: ")
-    (if (or (not (circe-network-connected-p network))
-            (y-or-n-p (format "Already connected to %s, reconnect?" network)))
-				(circe network)))
-  (defun pvik--irc ()
-    "Connect to IRC"
-    (interactive)
-    ;; (circe "Bitlbee")
-    (circe-maybe-connect "Freenode"))
-  :config
-  (setq circe-network-options
-				`(("Freenode"
-           :tls t
-           :nick "madmonkey"
-					 :nickserv-password ,freenode-password
-					 :reduce-lurker-spam t
-           :channels (;;"#emacs-circe"
-					  :after-auth "#clojure" "##java" "#lisp" "##rust")))))
-(use-package helm-circe
-  :ensure t
-  :after (helm circe))
-(use-package circe-notifications
-  :ensure t
-  :after (circe)
-  :config
-  (autoload 'enable-circe-notifications "circe-notifications" nil t)
-  ;; (eval-after-load "circe-notifications"
-  ;;   '(setq circe-notifications-watch-strings
-  ;; 	   '("people" "you" "like" "to" "hear" "from")))
-  (add-hook 'circe-server-connected-hook 'enable-circe-notifications))
-
-(global-set-key (kbd "C-c c h") 'helm-circe)
-(global-set-key (kbd "C-c c n") 'helm-circe-new-activity)
-
-;; =======================================================
-;; =======================================================
-
-;; General Configurations
-;; ======= ==============
-
-;; linum mode for all files
-(add-hook 'text-mode-hook 'linum-mode)
-(add-hook 'prog-mode-hook 'linum-mode)
-
-;; flyspell (fot text files)
+;; flyspell (for text files)
 (dolist (hook '(text-mode-hook))
   (add-hook hook (lambda () (flyspell-mode 1))))
 (global-set-key (kbd "<f8>") 'ispell-word)
@@ -898,43 +451,10 @@
 (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
 
 ;; Desktop
-(desktop-save-mode 1)
+;;(desktop-save-mode 1)
 
 ;; Default font
 (set-frame-font "Hack-9")
-
-;; Emacs Personal Functions and Customization
-;; ==========================================
-(require 'pvik-core)
-
-;; =======================================================
-;; =======================================================
-
-;; Reset GC back to normal
-(add-hook! 'after-init-hook
-  (lambda () 
-	(setq ;gc-cons-threshold 16777216
-	 gc-cons-percentage 0.1)))
-
-(add-hook! 'emacs-startup-hook
-  (setq file-name-handler-alist original--file-name-handler-alist))
-
-;; garbage collect on focus out
-(add-hook 'focus-out-hook #'garbage-collect)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(alert-default-style 'libnotify)
- '(custom-safe-themes
-   '("1d5e33500bc9548f800f9e248b57d1b2a9ecde79cb40c0b1398dec51ee820daf" "234dbb732ef054b109a9e5ee5b499632c63cc24f7c2383a849815dacc1727cb6" "4e10cdf7d030fb41061cf57c74f6ddfc19db8d4af6c8e0723dc77f9922543a3d" "34c99997eaa73d64b1aaa95caca9f0d64229871c200c5254526d0062f8074693" "84da7b37214b4ac095a55518502dfa82633bee74f64daf6e1785322e77516f96" "80365dd15f97396bdc38490390c23337063c8965c4556b8f50937e63b5e9a65c" "b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" default))
- '(package-selected-packages
-   '(list-packages-ext org-roam racket-mode elixir-mode rainbow-mode company-lsp lsp-ui lsp-mode flycheck-clj-kondo lua-mode merlin tuareg doom-modeline ox-reveal elm-mode ob-restclient slime-company slime sql-indent centaur-tabs company-go htmlize dockerfile-mode helm-posframe posframe go-mode company-distel diminish moody flycheck-nim nim-mode ac-geiser geiser flycheck-rust window-purpose w3m fill-column-indicator circe org spaceline-config eyebrowse helm-purpose scad-preview scad-mode spaceline neotree projectile which-key helm doom-themes use-package))
- '(safe-local-variable-values
-   '((org-edit-src-content . 0)
-	 (org-src-preserve-indentation))))
 
 ;; fonts
 (set-face-attribute 'default            nil :height pvik-default-font-height)
@@ -942,33 +462,14 @@
 (set-face-attribute 'mode-line-inactive nil :height pvik-modeline-inactive-font-height)
 (setq-default line-spacing pvik-line-spacing)
 
-;; frame title to include project name as well
-(setq-default frame-title-format
-    '(""
-      "%b"
-      (:eval
-       (let ((project-name (projectile-project-name)))
-         (unless (string= "-" project-name)
-           (format " in [%s]" project-name))))))
+
+;; garbage collect on focus out
+(add-hook 'focus-out-hook 'garbage-collect)
+
+;; Emacs Personal Functions and Customization
+;; ==========================================
+(require 'pvik-core)
+
+(setq gc-cons-threshold gc-cons-threshold-orig)
 
 ;;; init.el ends here
-
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
-;;  '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black")))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ahs-face ((t (:background "#3e4147" :foreground "#bbc2cf"))))
- '(ahs-plugin-defalt-face ((t (:background "#8795af" :foreground "Black"))) t)
- '(ahs-plugin-default-face ((t (:background "#8795af" :foreground "Black")))))
-
-;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
-;; (require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
-;; ## end of OPAM user-setup addition for emacs / base ## keep this line
