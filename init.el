@@ -23,7 +23,7 @@
 (add-to-list 'load-path "~/.emacs.d/modules/")
 (require 'doom-core-slim)
 (require 'private)
-(require 'tbemail) ;; ThunderBird email mode
+;; (require 'tbemail) ;; ThunderBird email mode
 
 ;; Display the total loading time in the minibuffer
 (defun display-startup-echo-area-message ()
@@ -544,9 +544,9 @@
 (use-package helm-tramp
   :ensure t
   :config
-  (add-hook 'helm-tramp-pre-command-hook '(lambda () (global-aggressive-indent-mode 0)
+  (add-hook 'helm-tramp-pre-command-hook (lambda () (global-aggressive-indent-mode 0)
 					    (projectile-mode 0)))
-  (add-hook 'helm-tramp-quit-hook '(lambda () (global-aggressive-indent-mode 1)
+  (add-hook 'helm-tramp-quit-hook (lambda () (global-aggressive-indent-mode 1)
 				     (projectile-mode 1))))
 
 (use-package exec-path-from-shell

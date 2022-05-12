@@ -446,7 +446,7 @@
 				sgml-mode-hook
 				json-mode-hook))
   (add-hook mode
-            '(lambda ()
+            (lambda ()
                (flyspell-prog-mode))))
 
 (use-package dockerfile-mode
