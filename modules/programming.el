@@ -244,4 +244,25 @@
 
 (provide 'programming)
 
+;; clojure
+(use-package clojure-mode
+  :ensure t
+  :config
+  (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
+  (add-hook 'clojure-mode-hook #'show-paren-mode)
+  (add-hook 'clojure-mode-hook #'projectile-mode)
+  (add-hook 'clojure-mode-hook #'hl-todo-mode)
+  (add-hook 'clojure-mode-hook #'outline-minor-mode))
+
+(use-package cider
+  :ensure t
+  :config
+  (add-hook 'cider-mode-hook #'smartparens-strict-mode)
+  (add-hook 'cider-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'cider-mode-hook #'aggressive-indent-mode)
+  (add-hook 'cider-mode-hook #'show-paren-mode)
+  (add-hook 'cider-mode-hook #'outline-minor-mode))
+
 ;;; programming.el ends here
