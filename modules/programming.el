@@ -252,24 +252,60 @@
 (provide 'programming)
 
 ;; clojure
+(use-package cider
+  :ensure t
+  :init
+  (add-hook 'cider-mode-hook 'eldoc-mode)
+  :config
+  (setq nrepl-hide-special-buffers t)
+  (setq nrepl-log-messages t)
+  (setq cider-repl-use-pretty-printing t)
+  (setq cider-boot-parameters "repl -s watch refresh")
+  (setq nrepl-repl-buffer-name-template "*cider-repl (%r%S)"))
+(use-package helm-cider
+  :ensure t
+  :after cider)
+;; (use-package flycheck-clojure
+;;   :ensure t
+;;   :after (flycheck cider)
+;;   :init
+;;   (flycheck-clojure-setup)
+;;   (add-hook 'after-init-hook #'global-flycheck-mode)
+;;   (add-hook 'cider-mode-hook
+;; 	    (lambda () (setq next-error-function #'flycheck-next-error-function))))
+(use-package clj-refactor
+  :ensure t)
+(use-package flycheck-clj-kondo
+  :ensure t)
 (use-package clojure-mode
   :ensure t
+  :after (;paredit
+		  smartparens rainbow-delimiters aggressive-indent cider
+					  flycheck-clojure clj-refactor projectile
+					  flycheck-clj-kondo)
   :config
-  (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+  (setq clojure-align-forms-automatically t)
+  ;;:init
+  ;;(add-to-list 'company-etags-mode 'clojure-mode)
+  (add-hook 'clojure-mode-hook #'flycheck-clj-kondo)
+  (add-hook 'clojure-mode-hook 'turn-on-smartparens-strict-mode)
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
   (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
   (add-hook 'clojure-mode-hook #'show-paren-mode)
   (add-hook 'clojure-mode-hook #'projectile-mode)
   (add-hook 'clojure-mode-hook #'hl-todo-mode)
-  (add-hook 'clojure-mode-hook #'outline-minor-mode))
-
-(use-package cider
-  :ensure t
-  :config
-  (add-hook 'cider-mode-hook #'smartparens-strict-mode)
-  (add-hook 'cider-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'cider-mode-hook #'aggressive-indent-mode)
-  (add-hook 'cider-mode-hook #'show-paren-mode)
-  (add-hook 'cider-mode-hook #'outline-minor-mode))
+  (add-hook 'clojure-mode-hook #'outline-minor-mode)
+  (add-hook 'clojure-mode-hook (lambda ()
+								 (clj-refactor-mode 1)
+								 (helm-cider-mode 1)
+								 (yas-minor-mode 1) ; for adding require/use/import statements
+								 (cljr-add-keybindings-with-prefix "M-RET")
+								 (pdf-occur-global-minor-mode -1)
+								 (tex-pdf-mode -1)))
+  (add-hook 'cider-repl-mode-hook 'turn-on-smartparens-strict-mode)
+  (add-hook 'cider-repl-mode-hook (lambda ()
+									(helm-cider-mode 1)
+									(pdf-occur-global-minor-mode -1)
+									(tex-pdf-mode -1))))
 
 ;;; programming.el ends here
