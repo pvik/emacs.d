@@ -241,6 +241,13 @@
   (add-hook 'slime-repl-mode-hook #'aggressive-indent-mode)
   (add-hook 'slime-repl-mode-hook #'show-paren-mode))
 
+;; erlang mode
+
+(setq load-path (cons "/usr/lib/erlang/lib/tools-3.5.2/emacs" load-path))
+(require 'erlang-start)
+(setq erlang-root-dir "/usr/lib/erlang/")
+(setq exec-path (cons "/usr/lib/erlang/bin" exec-path))
+(setq erlang-man-root-dir "/usr/lib/erlang/man")
 
 (provide 'programming)
 
