@@ -14,7 +14,8 @@
 (use-package company
   :ensure t
   :config
-  (add-hook 'after-init-hook 'global-company-mode))
+  (add-hook 'after-init-hook 'global-company-mode)
+  (setq lsp-completion-provider :capf))
 (use-package company-web
   :ensure t)
 (use-package company-shell
@@ -64,7 +65,7 @@
   (add-hook 'prog-mode-hook 'fci-mode))
 
 ;;;
-;; lsp mode (go / elixir)
+;; lsp mode
 ;;;
 
 (use-package lsp-mode
@@ -84,9 +85,9 @@
 
 ;; go mode
 
-;; Set up before-save hooks to format buffer and add/delete imports.
-;; Make sure you don't have other gofmt/goimports hooks enabled.
 (defun lsp-go-install-save-hooks ()
+  "Set up before-save hooks to format buffer and add/delete imports.
+Make sure you don't have other gofmt/goimports hooks enabled."
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
@@ -138,9 +139,12 @@
 
 ;; company-lsp integrates company mode completion with lsp-mode.
 ;; completion-at-point also works out of the box but doesn't support snippets.
-(use-package company-lsp
-  :ensure t
-  :commands company-lsp)
+;; NOTE company-lsp is deprecated
+;; (use-package company-lsp
+;;   :ensure t
+;;   :commands company-lsp
+;;   :config
+;;   (push 'company-lsp company-backends))
 
 (use-package go-mode
   :ensure t
