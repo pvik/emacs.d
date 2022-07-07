@@ -165,6 +165,15 @@
 (use-package go-projectile
   :ensure t)
 
+;; C/C++
+
+(use-package ccls
+  :ensure t
+  :hook ((c-mode c++-mode objc-mode cuda-mode) .
+         (lambda () (require 'ccls) (lsp)))
+  :config
+  (setq ccls-executable "/usr/bin/ccls"))
+
 ;; Rust Mode
 
 (use-package rust-mode
