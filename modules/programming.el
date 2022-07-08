@@ -207,6 +207,9 @@ Make sure you don't have other gofmt/goimports hooks enabled."
 (use-package racer
   :ensure t
   :defer t)
+(use-package rustic
+  :ensure t
+  :defer t)
 
 ;;;
 ;; lisp-y
