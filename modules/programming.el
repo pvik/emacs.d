@@ -209,7 +209,9 @@ Make sure you don't have other gofmt/goimports hooks enabled."
   :defer t)
 (use-package rustic
   :ensure t
-  :defer t)
+  :defer t
+  :config
+  (setq rustic-format-on-save t))
 
 ;;;
 ;; lisp-y
