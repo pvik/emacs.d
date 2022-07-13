@@ -63,13 +63,14 @@
 (setq auto-save-file-name-transforms
       `((".*" "/tmp/" t)))
 
-;; Prefer to reuse existing windows, especially those showing a buffer
-;; of the same mode
-(setq display-buffer-base-action
-  '((display-buffer-reuse-window
-     display-buffer-reuse-mode-window
-     display-buffer-same-window
-     display-buffer-in-previous-window)))
+;; ;; Prefer to reuse existing windows, especially those showing a buffer
+;; ;; of the same mode
+;; (setq display-buffer-base-action
+;;   '((display-buffer-reuse-window
+;;      display-buffer-reuse-mode-window
+;;      display-buffer-same-window
+;;      display-buffer-in-previous-window)
+;;     . ((mode . (org-mode helpful-mode help-mode)))))
 
 ;;;
 ;; use package
