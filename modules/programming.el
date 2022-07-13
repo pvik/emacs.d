@@ -103,6 +103,7 @@ Make sure you don't have other gofmt/goimports hooks enabled."
   (lsp-ui-doc-enable nil)
   (lsp-ui-doc-header nil)
   (lsp-ui-doc-use-childframe t)
+  (lsp-ui-doc-position 'bottom)
   ;; (lsp-ui-doc-use-webkit t)
   (lsp-ui-doc-max-height 120)
   (lsp-ui-doc-max-height 30)
