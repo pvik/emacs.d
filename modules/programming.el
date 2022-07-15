@@ -262,7 +262,7 @@ Make sure you don't have other gofmt/goimports hooks enabled."
 
 ;; erlang mode
 
-(setq load-path (cons "/usr/lib/erlang/lib/tools-3.5.2/emacs" load-path))
+(setq load-path (cons "/usr/lib/erlang/lib/tools-3.5.3/emacs" load-path))
 (require 'erlang-start)
 (setq erlang-root-dir "/usr/lib/erlang/")
 (setq exec-path (cons "/usr/lib/erlang/bin" exec-path))

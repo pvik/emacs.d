@@ -84,11 +84,11 @@
   (delete-other-windows)
   ;; Create new window right of the current one
   ;; Current window is 80 characters (columns) wide
-  (split-window-right 110)
+  (split-window-right 100)
   ;; Go to next window
   (other-window 1)
   ;; Create new window below current one
-  (split-window-below 40)
+  (split-window-below)
   ;; Start eshell in current window
   ;; (eshell)
   ;; Go to previous window
