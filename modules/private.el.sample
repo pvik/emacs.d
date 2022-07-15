@@ -7,6 +7,8 @@
 
 ;;; Code:
 
+(defvar pvik-default-notes-file "~/notes.org")
+
 (setq freenode-password "your password")
 
 (defvar pvik-line-spacing 4)
@@ -16,6 +18,9 @@
 (defvar pvik-modeline-height 48)
 (defvar pvik-modeline-active-font-height 82)
 (defvar pvik-modeline-inactive-font-height 76)
+
+(defvar pvik-left-frame-size 100)
+(defvar pvik-bottom-frame-size 40)
 
 (provide 'private)
 

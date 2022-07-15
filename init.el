@@ -37,7 +37,7 @@
 
 (setq-default
  inhibit-startup-screen t
- initial-scratch-message ";; Happy Hacking!!"
+ initial-scratch-message ";; Happy Hacking!!\n\n;; C-c C-f C-s : Split Windows\n;; C-c C-f C-n : Next Window\n;; C-c C-f C-p : Previous Window\n;; C-c C-f C-f : Move Buffer to Next Window\n;; C-c C-f C-b : Move Buffer to Previous Window\n;; C-c C-f C-w : Swap Buffer with next window\n\n;; C-c C-o C-n : Open Notes"
  left-margin-width 1 right-margin-width 1     ; Add left and right margins
  select-enable-clipboard t       ; Merge system's and Emacs' clipboard
  cursor-type '(bar . 2)          ; set cursor type to bar
@@ -62,22 +62,6 @@
       `((".*" . "/tmp/")))
 (setq auto-save-file-name-transforms
       `((".*" "/tmp/" t)))
-
-;; From: https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Tips-DisplayBuffer-1.org
-;; ;; Prefer to reuse existing windows, especially those showing a buffer
-;; ;; of the same mode
-;; (setq display-buffer-base-action
-;;   '((display-buffer-reuse-window
-;;      display-buffer-reuse-mode-window
-;;      display-buffer-same-window
-;;      display-buffer-in-previous-window)
-;;     . ((mode . (org-mode helpful-mode help-mode)))))
-
-;;;
-;; Frames
-;;;
-
-(require 'frames)
 
 
 ;;;
@@ -488,6 +472,13 @@
 ;; Emacs Personal Functions and Customization
 ;; ==========================================
 (require 'pvik-core)
+
+;;;
+;; Frames
+;;;
+
+(require 'frames)
+(pvik/split-windows)
 
 (setq gc-cons-threshold gc-cons-threshold-orig)
 

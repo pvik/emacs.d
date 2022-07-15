@@ -1,8 +1,18 @@
-;;; frames.el --- Define and configure frame related stuff
+ ;;; frames.el --- Define and configure frame related stuff
 
 ;;; Commentary:
 
 ;;; Code:
+
+;; From: https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Tips-DisplayBuffer-1.org
+;; ;; Prefer to reuse existing windows, especially those showing a buffer
+;; ;; of the same mode
+;; (setq display-buffer-base-action
+;;   '((display-buffer-reuse-window
+;;      display-buffer-reuse-mode-window
+;;      display-buffer-same-window
+;;      display-buffer-in-previous-window)
+;;     . ((mode . (org-mode helpful-mode help-mode)))))
 
 (defun pvik/split-windows()
   "Split windows my way."
@@ -11,14 +21,14 @@
   (delete-other-windows)
   ;; Create new window right of the current one
   ;; Current window is 80 characters (columns) wide
-  (split-window-right 100)
+  (split-window-right pvik-left-frame-size)
   ;; Go to next window
   (other-window 1)
   ;; Create new window below current one
-  (split-window-below)
-  ;; Start eshell in current window
-  ;; (eshell)
-  ;; Go to previous window
+  (split-window-below pvik-bottom-frame-size) 
+  ;; Open default notes file
+  (find-file pvik-default-notes-file)
+  ;; Go to prev window
   (other-window -1)
   ;; never open any buffer in window with shell
   ;; (set-window-dedicated-p (nth 1 (window-list)) t)
@@ -111,11 +121,14 @@ Minibuffer is ignored."
 (global-set-key (kbd "C-c C-f C-s")  #'pvik/split-windows)
 
 (global-set-key (kbd "C-c C-f C-n")  #'next-multiframe-window)
-(global-set-key (kbd "C-c C-f C-b")  #'previous-multiframe-window)
+(global-set-key (kbd "C-c C-f C-p")  #'previous-multiframe-window)
 
 (global-set-key (kbd "C-c C-f C-f")  #'pvik/move-buf-to-next-window)
-(global-set-key (kbd "C-c C-f C-p")  #'pvik/move-buf-to-previous-window)
+(global-set-key (kbd "C-c C-f C-b")  #'pvik/move-buf-to-previous-window)
 (global-set-key (kbd "C-c C-f C-w")  #'pvik/swap-buf-with-next-window)
+
+(global-set-key (kbd "C-c C-o C-n")  (lambda () (interactive) (find-file pvik-default-notes-file)) )
+
 
 (provide 'frames)
 ;;; frames.el ends here
