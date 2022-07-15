@@ -268,8 +268,6 @@ Make sure you don't have other gofmt/goimports hooks enabled."
 (setq exec-path (cons "/usr/lib/erlang/bin" exec-path))
 (setq erlang-man-root-dir "/usr/lib/erlang/man")
 
-(provide 'programming)
-
 ;; clojure
 (use-package cider
   :ensure t
@@ -326,5 +324,7 @@ Make sure you don't have other gofmt/goimports hooks enabled."
 									(helm-cider-mode 1)
 									(pdf-occur-global-minor-mode -1)
 									(tex-pdf-mode -1))))
+
+(provide 'programming)
 
 ;;; programming.el ends here
