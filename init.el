@@ -158,7 +158,9 @@ Minibuffer is ignored."
 
 (global-set-key (kbd "C-c C-f C-s")  #'pvik/split-windows)
 (global-set-key (kbd "C-c C-f C-f")  #'next-multiframe-window)
+(global-set-key (kbd "C-c C-f C-n")  #'next-multiframe-window)
 (global-set-key (kbd "C-c C-f C-b")  #'previous-multiframe-window)
+(global-set-key (kbd "C-c C-f C-p")  #'previous-multiframe-window)
 
 ;;;
 ;; use package
@@ -355,9 +357,9 @@ Minibuffer is ignored."
     (set-face-attribute 'mode-line-inactive nil :box        nil)
     (set-face-attribute 'mode-line          nil :height     pvik-modeline-active-font-height) ;; defined in private.el
     (set-face-attribute 'mode-line-inactive nil :height     pvik-modeline-inactive-font-height)
-    ;; (set-face-attribute 'mode-line          nil :foreground "#bbc2cf")
-    ;; (set-face-attribute 'mode-line          nil :background "#2257A0")
-    ;; (set-face-attribute 'mode-line-inactive nil :background "#21242b")
+    (set-face-attribute 'mode-line          nil :foreground "#bbc2cf")
+    (set-face-attribute 'mode-line          nil :background "#2257A0")
+    (set-face-attribute 'mode-line-inactive nil :background "#21242b")
     )
   (set-face-attribute 'default nil :height pvik-default-font-height)
   (diminish 'flycheck-mode)
