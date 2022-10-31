@@ -325,6 +325,28 @@ Make sure you don't have other gofmt/goimports hooks enabled."
 									(pdf-occur-global-minor-mode -1)
 									(tex-pdf-mode -1))))
 
+
+;; Janet
+(use-package janet-mode
+  :ensure t
+  :after (smartparens rainbow-delimiters aggressive-indent projectile)
+  :config
+  ;;:init
+  (add-hook 'janet-mode-hook 'turn-on-smartparens-strict-mode)
+  (add-hook 'janet-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'janet-mode-hook #'aggressive-indent-mode)
+  (add-hook 'janet-mode-hook #'show-paren-mode)
+  (add-hook 'janet-mode-hook #'projectile-mode)
+  (add-hook 'janet-mode-hook #'hl-todo-mode)
+  (add-hook 'janet-mode-hook #'outline-minor-mode))
+
+(straight-use-package
+ '(ijanet
+   :type git
+   :host github
+   :repo "serialdev/ijanet-mode"
+   ))
+
 (provide 'programming)
 
 ;;; programming.el ends here
