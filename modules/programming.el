@@ -171,7 +171,7 @@ Make sure you don't have other gofmt/goimports hooks enabled."
   :ensure t)
 
 ;; C/C++
-
+;; make sure ccls package is installed on host OS
 (use-package ccls
   :ensure t
   :hook ((c-mode c++-mode objc-mode cuda-mode) .
