@@ -262,11 +262,35 @@ Make sure you don't have other gofmt/goimports hooks enabled."
 
 ;; erlang mode
 
-(setq load-path (cons "/usr/lib/erlang/lib/tools-3.5.3/emacs" load-path))
-(require 'erlang-start)
-(setq erlang-root-dir "/usr/lib/erlang/")
-(setq exec-path (cons "/usr/lib/erlang/bin" exec-path))
-(setq erlang-man-root-dir "/usr/lib/erlang/man")
+;; (use-package ivy-erlang-complete
+;;   :ensure t)
+
+(use-package delight
+  :ensure t)
+
+(use-package erlang
+  :load-path ("/usr/lib/erlang/lib/tools-3.5.3/emacs")
+  ;; :hook (after-save . ivy-erlang-complete-reparse)
+  ;; :custom (ivy-erlang-complete-erlang-root "<PATH TO OTP>/lib/erlang/")
+  :mode (("\\.erl?$" . erlang-mode)
+	 ("rebar\\.config$" . erlang-mode)
+	 ("relx\\.config$" . erlang-mode)
+	 ("sys\\.config\\.src$" . erlang-mode)
+	 ("sys\\.config$" . erlang-mode)
+	 ("\\.config\\.src?$" . erlang-mode)
+	 ("\\.config\\.script?$" . erlang-mode)
+	 ("\\.hrl?$" . erlang-mode)
+	 ("\\.app?$" . erlang-mode)
+	 ("\\.app.src?$" . erlang-mode)
+	 ("\\Emakefile" . erlang-mode))
+  :config
+  ;; (ivy-erlang-complete-init)
+  (setq erlang-root-dir "/usr/lib/erlang/")
+  (setq exec-path (cons "/usr/lib/erlang/bin" exec-path))
+  (setq erlang-man-root-dir "/usr/lib/erlang/man"))
+
+;; (setq load-path (cons "/usr/lib/erlang/lib/tools-3.5.3/emacs" load-path))
+;; (require 'erlang-start)
 
 ;; clojure
 (use-package cider
