@@ -245,7 +245,7 @@
       (with-selected-frame frame
 		(run-with-timer 0.1 nil #'my-init-theme))))
   :config
-  (setq doom-themes-enable-bold t  ; if nil, bold is universally disabled
+  (setq doom-themes-enable-bold nil  ; if nil, bold is universally disabled
 		doom-themes-enable-italic t) ; if nil, italics is universally disabled
   (load-theme 'doom-one t)
   (doom-themes-visual-bell-config) ;; Enable flashing mode-line on errors
@@ -458,7 +458,7 @@
 (desktop-read)
 
 ;; Default font
-(set-frame-font "Hack-9")
+(set-frame-font "Source Code Pro 9")
 
 ;; fonts
 (set-face-attribute 'default            nil :height pvik-default-font-height)
