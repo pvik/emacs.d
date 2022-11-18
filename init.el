@@ -63,6 +63,8 @@
 (setq auto-save-file-name-transforms
       `((".*" "/tmp/" t)))
 
+(global-display-fill-column-indicator-mode 1)
+(setq-default display-fill-column-indicator t)
 
 ;;;
 ;; use package
@@ -342,7 +344,7 @@
   ;; (helm-autoresize-mode t)
   :config
   ;; (global-unset-key (kbd "C-x b"))
-  (global-set-key (kbd "M-x") #'helm-M-x) 
+  (global-set-key (kbd "M-x") #'helm-M-x)
   (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
   (global-set-key (kbd "C-x b") #'helm-mini)
   (global-set-key (kbd "C-x C-f") #'helm-find-files)
@@ -458,7 +460,7 @@
 (desktop-read)
 
 ;; Default font
-(set-frame-font "Source Code Pro 9")
+(set-frame-font "Fira Code 9")
 
 ;; fonts
 (set-face-attribute 'default            nil :height pvik-default-font-height)

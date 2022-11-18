@@ -59,10 +59,10 @@
   ;;(global-auto-highlight-symbol-mode t)
   )
 
-(use-package fill-column-indicator
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'fci-mode))
+;; (use-package fill-column-indicator
+;;   :ensure t
+;;   :config
+;;   (add-hook 'prog-mode-hook 'fci-mode))
 
 ;;;
 ;; lsp mode
