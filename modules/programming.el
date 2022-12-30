@@ -15,7 +15,9 @@
   :ensure t
   :config
   (add-hook 'after-init-hook 'global-company-mode)
-  (setq lsp-completion-provider :capf))
+  (setq lsp-completion-provider :capf)
+  (setq company-minimum-prefix-length 1
+		company-idle-delay 0.0)) ;; default is 0.2
 (use-package company-web
   :ensure t)
 (use-package company-shell
@@ -59,11 +61,6 @@
   ;;(global-auto-highlight-symbol-mode t)
   )
 
-;; (use-package fill-column-indicator
-;;   :ensure t
-;;   :config
-;;   (add-hook 'prog-mode-hook 'fci-mode))
-
 ;;;
 ;; lsp mode
 ;;;
@@ -85,12 +82,6 @@
 
 ;; go mode
 
-(defun lsp-go-install-save-hooks ()
-  "Set up before-save hooks to format buffer and add/delete imports.
-Make sure you don't have other gofmt/goimports hooks enabled."
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 ;; Optional - provides fancier overlays.
 (use-package lsp-ui
@@ -155,16 +146,21 @@ Make sure you don't have other gofmt/goimports hooks enabled."
   :preface
   (defun my-go-mode-hook ()
 	(go-projectile-set-gopath)
-	;; (local-set-key (kbd "M-.") 'godef-jump)
 	;; (local-set-key (kbd "M-*") 'pop-tag-mark)
-	)  
+	)
+  (defun lsp-go-install-save-hooks ()
+	"Set up before-save hooks to format buffer and add/delete imports.
+     Make sure you don't have other gofmt/goimports hooks enabled."
+	(add-hook 'before-save-hook #'lsp-format-buffer t t)
+	(add-hook 'before-save-hook #'lsp-organize-imports t t))
   :config
   ;; (add-hook 'go-mode-hook 'lsp-deferred)
   (add-to-list 'exec-path "/home/elric/Work/gocode/bin")
   ;; (add-hook 'before-save-hook 'gofmt-before-save)
   ;; (local-set-key (kbd "M-.") 'godef-jump)
   ;; (local-set-key (kbd "M-*") 'pop-tag-mark)
-  (add-hook 'go-mode-hook 'my-go-mode-hook))
+  (add-hook 'go-mode-hook 'my-go-mode-hook)
+  (add-hook 'go-mode-hook 'lsp-go-install-save-hooks))
 (use-package go-playground
   :ensure t)
 (use-package go-projectile

@@ -392,19 +392,34 @@
 
 ;; Restclient
 (use-package restclient
-  :ensure t)
+  :ensure t
+  :defer t)
 (use-package company-restclient
-  :ensure t)
+  :ensure t
+  :defer t)
 (use-package ob-restclient
-  :ensure t)
+  :ensure t
+  :defer t)
+
+(use-package htmlize
+  :ensure t
+  :defer t)
 
 ;; plantuml mode
-(use-package htmlize
-  :ensure t)
 (use-package plantuml-mode
-  :ensure t)
+  :ensure t
+  :defer t
+  :mode "\\.puml\\'"
+  :config
+  (setq plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar")
+  (setq plantuml-default-exec-mode 'jar))
 (use-package flycheck-plantuml
-  :ensure t)
+  :ensure t
+  :defer t
+  :after flycheck
+  :config
+  (with-eval-after-load 'flycheck
+	(add-hook 'flycheck-mode-hook #'flycheck-plantuml-setup)))
 
 ;; Data modes
 ;; ==========
