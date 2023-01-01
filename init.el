@@ -421,14 +421,24 @@
   (with-eval-after-load 'flycheck
 	(add-hook 'flycheck-mode-hook #'flycheck-plantuml-setup)))
 
+;; d2 lang mode
+(use-package d2-mode
+  :ensure t
+  :defer t
+  :mode "\\.d2\\'"
+  :config
+  ;; (setq plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar")
+  ;; (setq plantuml-default-exec-mode 'jar)
+  )
+
 ;; Data modes
 ;; ==========
 
 (use-package json-mode
   :mode "\\.json\\'")
 
-;; (use-package nxml
-;;   :ensure t)
+(use-package nxml
+  :ensure t)
 (use-package toml-mode
   :ensure t
   :mode "\\.toml\\'")
