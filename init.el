@@ -505,7 +505,7 @@
 ;;;
 
 (require 'frames)
-(pvik/split-windows)
+;; (pvik/split-windows)
 
 (setq gc-cons-threshold gc-cons-threshold-orig)
 
