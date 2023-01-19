@@ -437,8 +437,8 @@
 (use-package json-mode
   :mode "\\.json\\'")
 
-(use-package nxml
-  :ensure t)
+;; (use-package nxml
+;;   :ensure t)
 (use-package toml-mode
   :ensure t
   :mode "\\.toml\\'")
