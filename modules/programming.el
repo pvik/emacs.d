@@ -341,15 +341,13 @@
   :ensure t)
 (use-package clojure-mode
   :ensure t
-  :after (;paredit
-		  smartparens rainbow-delimiters aggressive-indent cider
-					  flycheck-clojure clj-refactor projectile
-					  flycheck-clj-kondo)
+  ;; :after (smartparens rainbow-delimiters aggressive-indent cider
+  ;; 					  flycheck-clojure clj-refactor projectile
+  ;; 					  flycheck-clj-kondo)
   :config
   (setq clojure-align-forms-automatically t)
   ;;:init
   ;;(add-to-list 'company-etags-mode 'clojure-mode)
-  (add-hook 'clojure-mode-hook #'flycheck-clj-kondo)
   (add-hook 'clojure-mode-hook 'turn-on-smartparens-strict-mode)
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
   (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
@@ -362,13 +360,17 @@
 								 (helm-cider-mode 1)
 								 (yas-minor-mode 1) ; for adding require/use/import statements
 								 (cljr-add-keybindings-with-prefix "M-RET")
-								 (pdf-occur-global-minor-mode -1)
-								 (tex-pdf-mode -1)))
+								 ;; (pdf-occur-global-minor-mode -1)
+								 ;; (tex-pdf-mode -1)
+								 ))
   (add-hook 'cider-repl-mode-hook 'turn-on-smartparens-strict-mode)
   (add-hook 'cider-repl-mode-hook (lambda ()
 									(helm-cider-mode 1)
-									(pdf-occur-global-minor-mode -1)
-									(tex-pdf-mode -1))))
+									;; (pdf-occur-global-minor-mode -1)
+									;; (tex-pdf-mode -1)
+									))
+  (require 'flycheck-clj-kondo)
+  )
 
 
 ;; Janet
