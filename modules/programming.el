@@ -10,6 +10,13 @@
 (use-package aggressive-indent
   :ensure t)
 
+;; tree sitter
+(use-package tree-sitter
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
 ;; company mode - complete anything
 (use-package company
   :ensure t
@@ -74,10 +81,24 @@
   :init
   ;; (add-to-list 'exec-path "/home/elric/Downloads/elixir-ls")
   :config
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   ;; (setq lsp-clients-elixir-server-executable "elixir-ls")
   ;;  (lsp-register-custom-settings
   ;; '(("gopls.completeUnimported" t t)
   ;;   ("gopls.staticcheck" t t)))
+  :custom
+  ;; what to use when checking on-save. "check" is default, I prefer clippy
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  (lsp-eldoc-render-all t)
+  (lsp-idle-delay 0.6)
+  ;; enable / disable the hints as you prefer:
+  (lsp-rust-analyzer-server-display-inlay-hints t)
+  (lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
+  (lsp-rust-analyzer-display-chaining-hints t)
+  (lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
+  (lsp-rust-analyzer-display-closure-return-type-hints t)
+  (lsp-rust-analyzer-display-parameter-hints nil)
+  (lsp-rust-analyzer-display-reborrow-hints nil)
   )
 
 ;; go mode
@@ -111,6 +132,7 @@
   (lsp-ui-imenu-enable t)
   (lsp-ui-imenu-kind-position 'top)
   ;; lsp-ui-peek
+  (lsp-ui-peek-always-show t)
   (lsp-ui-peek-enable t)
   (lsp-ui-peek-peek-height 20)
   (lsp-ui-peek-list-width 50)
@@ -186,7 +208,7 @@
   (setq rust-format-on-save t)
   (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
   (setq racer-rust-src-path "~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src") ;; Rust source code PATH
-
+  (add-hook 'rust-mode-hook #'lsp)
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode)
   (add-hook 'racer-mode-hook #'company-mode))
@@ -203,12 +225,15 @@
 	(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 (use-package racer
   :ensure t
-  :defer t)
-(use-package rustic
-  :ensure t
   :defer t
   :config
-  (setq rustic-format-on-save t))
+  (add-hook 'racer-mode-hook #'eldoc-mode))
+;; (use-package rustic
+;;   :ensure t
+;;   :defer t
+;;   :config
+;;   (setq rustic-format-on-save t)
+;;   (setq rustic-lsp-server 'rls))
 
 ;;;
 ;; lisp-y
