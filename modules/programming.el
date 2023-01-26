@@ -341,9 +341,7 @@
   :ensure t)
 (use-package clojure-mode
   :ensure t
-  ;; :after (smartparens rainbow-delimiters aggressive-indent cider
-  ;; 					  flycheck-clojure clj-refactor projectile
-  ;; 					  flycheck-clj-kondo)
+  :after (smartparens rainbow-delimiters flycheck-clj-kondo cider)
   :config
   (setq clojure-align-forms-automatically t)
   ;;:init
