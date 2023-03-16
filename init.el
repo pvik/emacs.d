@@ -485,10 +485,14 @@
 (desktop-read)
 
 ;; Default font
-(set-frame-font "Fira Code 9")
+
+(setq default-font "Hack")
+
+
 
 ;; fonts
-(set-face-attribute 'default            nil :height pvik-default-font-height)
+(set-frame-font default-font)
+(set-face-attribute 'default nil :family default-font :height pvik-default-font-height :weight 'normal)
 (set-face-attribute 'mode-line          nil :height pvik-modeline-active-font-height) ;; defined in private.el
 (set-face-attribute 'mode-line-inactive nil :height pvik-modeline-inactive-font-height)
 (setq-default line-spacing pvik-line-spacing)
