@@ -138,7 +138,7 @@
   (lsp-ui-peek-list-width 50)
   (lsp-ui-peek-fontify 'on-demand) ;; never, on-demand, or always
   :config
-  (fci-mode 0)
+  ;;(fci-mode 0)
   :preface
   (defun ladicle/toggle-lsp-ui-doc ()
 	(interactive)
