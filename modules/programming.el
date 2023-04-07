@@ -82,6 +82,10 @@
   ;; (add-to-list 'exec-path "/home/elric/Downloads/elixir-ls")
   :config
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  ;; rust
+  (setq rustic-lsp-server 'rust-analyzer)
+  (setq rustic-format-on-save t)
+  (setq lsp-rust-server 'rust-analyzer)
   ;; (setq lsp-clients-elixir-server-executable "elixir-ls")
   ;;  (lsp-register-custom-settings
   ;; '(("gopls.completeUnimported" t t)
@@ -98,16 +102,13 @@
   (lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
   (lsp-rust-analyzer-display-closure-return-type-hints t)
   (lsp-rust-analyzer-display-parameter-hints nil)
-  (lsp-rust-analyzer-display-reborrow-hints nil)
-  )
-
-;; go mode
-
+  (lsp-rust-analyzer-display-reborrow-hints nil))
 
 ;; Optional - provides fancier overlays.
 (use-package lsp-ui
   :ensure t
   :defer t
+  :after lsp-mode
   :commands lsp-ui-mode
   :custom
   ;; (setq lsp-ui-doc-delay 1)
@@ -174,6 +175,7 @@
 ;;   :config
 ;;   (push 'company-lsp company-backends))
 
+;; go mode
 (use-package go-mode
   :ensure t
   :mode "\\.go\\'"
@@ -213,19 +215,24 @@
 
 ;; Rust Mode
 
-(use-package rust-mode
-  :ensure t
-  :mode "\\.rs\\'"
-  :bind
-  (("C-c C-k". compile))
-  :config
-  (setq rust-format-on-save t)
-  (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
-  (setq racer-rust-src-path "~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src") ;; Rust source code PATH
-  (add-hook 'rust-mode-hook #'lsp)
-  (add-hook 'rust-mode-hook #'racer-mode)
-  (add-hook 'racer-mode-hook #'eldoc-mode)
-  (add-hook 'racer-mode-hook #'company-mode))
+;; (use-package rust-mode
+;;   :ensure t
+;;   :mode "\\.rs\\'"
+;;   :after (lsp-mode)
+;;   :hook
+;;   (rust-mode . lsp-deferred)
+;;   :bind
+;;   (("C-c C-k". compile))
+;;   :config
+;;   (setq rust-format-on-save t)
+;;   (setq lsp-rust-server 'rust-analyzer)
+;;   (add-hook 'rust-mode-hook #'lsp)
+;;   ;; (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
+;;   ;; (setq racer-rust-src-path "~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src") ;; Rust source code PATH
+;;   ;; (add-hook 'rust-mode-hook #'racer-mode)
+;;   ;; (add-hook 'racer-mode-hook #'eldoc-mode)
+;;   ;; (add-hook 'racer-mode-hook #'company-mode)
+;;   )
 (use-package cargo
   :ensure t
   :defer t
@@ -234,20 +241,54 @@
 (use-package flycheck-rust
   :ensure t
   :defer t
+  :after (flycheck rust-mode)
   :config
   (with-eval-after-load 'rust-mode
 	(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
-(use-package racer
-  :ensure t
-  :defer t
-  :config
-  (add-hook 'racer-mode-hook #'eldoc-mode))
 ;; (use-package rustic
 ;;   :ensure t
 ;;   :defer t
+;;   :after (rust-mode lsp-mode))
+;; (use-package racer
+;;   :ensure t
+;;   :defer t
 ;;   :config
-;;   (setq rustic-format-on-save t)
-;;   (setq rustic-lsp-server 'rls))
+;;   (add-hook 'racer-mode-hook #'eldoc-mode))
+
+(use-package rustic
+  :ensure
+  ;; :mode "\\.rs\\'"
+  ;; :after (lsp-mode)
+  :bind (:map rustic-mode-map
+              ("M-j" . lsp-ui-imenu)
+              ("M-?" . lsp-find-references)
+              ("C-c C-c l" . flycheck-list-errors)
+              ("C-c C-c a" . lsp-execute-code-action)
+              ("C-c C-c r" . lsp-rename)
+              ("C-c C-c q" . lsp-workspace-restart)
+              ("C-c C-c Q" . lsp-workspace-shutdown)
+              ("C-c C-c s" . lsp-rust-analyzer-status))
+  :custom 
+  (rustic-analyzer-command '("rustup" "run" "nightly" "rust-analyzer"))
+  :config
+  (setq rustic-lsp-client 'lsp-mode)
+  ;; uncomment for less flashiness
+  ;; (setq lsp-eldoc-hook nil)
+  ;; (setq lsp-enable-symbol-highlighting nil)
+  ;; (setq lsp-signature-auto-activate nil)
+
+  ;; comment to disable rustfmt on save
+  (setq rustic-format-on-save t)
+  (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
+
+(defun rk/rustic-mode-hook ()
+  ;; so that run C-c C-c C-r works without having to confirm, but don't try to
+  ;; save rust buffers that are not file visiting. Once
+  ;; https://github.com/brotzeit/rustic/issues/253 has been resolved this should
+  ;; no longer be necessary.
+  (when buffer-file-name
+    (setq-local buffer-save-without-query t))
+  (add-hook 'before-save-hook 'lsp-format-buffer nil t))
 
 ;;;
 ;; lisp-y
