@@ -486,9 +486,7 @@
 
 ;; Default font
 
-(setq default-font "Hack")
-
-
+(setq default-font "FiraCode")
 
 ;; fonts
 (set-frame-font default-font)
