@@ -377,6 +377,20 @@
 (use-package exec-path-from-shell
   :ensure t)
 
+;; org-mode
+;; ========
+
+(use-package org
+  :ensure t
+  :config
+  ;; (setq org-directory (expand-file-name "~/org"))
+  (setq org-default-notes-file (expand-file-name pvik-default-notes-file))
+  ;; (setq org-agenda-files '("~/org" "~/www/org" "~/www/_org"))
+  ;; hide leading stars
+  (setq org-startup-indented t
+		org-hide-leading-stars t)
+  (setq org-adapt-indentation t))
+
 ;; magit
 (use-package magit
   :ensure t
