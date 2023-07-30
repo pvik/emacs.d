@@ -5,8 +5,9 @@
 
 ;;; Code:
 
-;; global line num mode
-(global-display-line-numbers-mode)
+;; display line numbers mode
+;; (global-display-line-numbers-mode)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 ;; Language Modes and config
 ;; =========================

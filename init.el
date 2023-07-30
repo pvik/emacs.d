@@ -383,6 +383,7 @@
 (use-package org
   :ensure t
   :config
+  (add-hook 'org-mode-hook #'display-line-numbers-mode)
   ;; (setq org-directory (expand-file-name "~/org"))
   (setq org-default-notes-file (expand-file-name pvik-default-notes-file))
   ;; (setq org-agenda-files '("~/org" "~/www/org" "~/www/_org"))
