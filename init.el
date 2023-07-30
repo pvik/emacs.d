@@ -191,8 +191,8 @@
 (setq backward-delete-char-untabify-method 'hungry)
 
 ;; linum mode for all files
-(add-hook 'text-mode-hook 'linum-mode)
-(add-hook 'prog-mode-hook 'linum-mode)
+;; (add-hook 'text-mode-hook 'linum-mode)
+;; (add-hook 'prog-mode-hook 'linum-mode)
 
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer))

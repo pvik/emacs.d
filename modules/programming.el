@@ -4,6 +4,10 @@
 ;; Configuration for all Programming languages used
 
 ;;; Code:
+
+;; global line num mode
+(global-display-line-numbers-mode)
+
 ;; Language Modes and config
 ;; =========================
 
