@@ -1,4 +1,5 @@
 straight/
+cache/
 .cask/
 racket-mode/
 .lsp*
