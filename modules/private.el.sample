@@ -8,6 +8,7 @@
 ;;; Code:
 
 (defvar pvik-default-notes-file "~/notes.org")
+(defvar pvik-default-work-notes-file "~/work.org")
 
 (setq freenode-password "your password")
 

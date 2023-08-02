@@ -128,6 +128,7 @@ Minibuffer is ignored."
 (global-set-key (kbd "C-c C-f C-w")  #'pvik/swap-buf-with-next-window)
 
 (global-set-key (kbd "C-c C-o C-n")  (lambda () (interactive) (find-file pvik-default-notes-file)) )
+(global-set-key (kbd "C-c C-o C-w")  (lambda () (interactive) (find-file pvik-default-work-notes-file)) )
 
 
 (provide 'frames)
