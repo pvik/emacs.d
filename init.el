@@ -390,7 +390,22 @@
   ;; hide leading stars
   (setq org-startup-indented t
 		org-hide-leading-stars t)
-  (setq org-adapt-indentation t))
+  (setq org-adapt-indentation t)
+  (setq org-startup-with-inline-images t)
+  (org-babel-do-load-languages
+    'org-babel-load-languages
+    '((d2 . t)
+      (mermaid . t))))
+
+(use-package ob-mermaid
+  :ensure t
+  :config
+  (setq ob-mermaid-cli-path "/usr/bin/mmdc"))
+
+(use-package ob-d2
+  :ensure t
+  :config
+  (setq ob-d2-cli-path "/usr/bin/d2"))
 
 ;; magit
 (use-package magit
