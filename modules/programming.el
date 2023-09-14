@@ -390,6 +390,12 @@
 ;; (setq load-path (cons "/usr/lib/erlang/lib/tools-3.5.3/emacs" load-path))
 ;; (require 'erlang-start)
 
+;; elixir mode
+(use-package elixir-mode
+  :ensure t
+  :config
+  (add-hook 'before-save-hook 'elixir-format nil t))
+
 ;; clojure
 (use-package cider
   :ensure t
