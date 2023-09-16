@@ -393,8 +393,12 @@
 ;; elixir mode
 (use-package elixir-mode
   :ensure t
+  :preface
+  (defun elixir-save-hooks ()
+	"Set up before-save hooks to formatbuffer."
+	(add-hook 'before-save-hook 'elixir-format nil t))
   :config
-  (add-hook 'before-save-hook 'elixir-format nil t))
+  (add-hook 'elixir-mode-hook 'elixir-save-hooks))
 
 ;; clojure
 (use-package cider
