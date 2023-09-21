@@ -169,7 +169,21 @@
   (projectile-mode +1)
   :bind (:map projectile-mode-map
               ;; ("s-p" . projectile-command-map)
-              ("C-c p" . projectile-command-map)))
+              ("C-c p" . projectile-command-map))
+  :config
+  ;; ignoring specific buffers by name
+  (setq projectile-globally-ignored-buffers
+		'("*scratch*"
+		  "*lsp-log*"
+		  "*gopls::stderr"))
+  ;; ignoring buffers by their major mode
+  (setq projectile-globally-ignored-modes
+		'("erc-mode"
+		  "help-mode"
+		  "completion-list-mode"
+		  "Buffer-menu-mode"
+		  "gnus-.*-mode"
+		  "occur-mode")))
 
 ;;;
 ;; Buffers
