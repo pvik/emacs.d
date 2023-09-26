@@ -523,6 +523,15 @@
   (ispell-word))
 (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
 
+;; eshell
+(add-hook 'eshell-mode-hook
+          (lambda ()
+            (setenv "TERM" "xterm-256color")))
+(add-hook 'eshell-before-prompt-hook (setq xterm-color-preserve-properties t))
+(add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
+(setq eshell-output-filter-functions
+      (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
+
 ;; Desktop
 (desktop-save-mode 1)
 (setq desktop-path '("~/.emacs.d/cache/"))
