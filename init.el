@@ -37,7 +37,7 @@
 
 (setq-default
  inhibit-startup-screen t
- initial-scratch-message ";; Happy Hacking!!\n\n;; C-c C-f C-s : Split Windows\n;; C-c C-f C-n : Next Window\n;; C-c C-f C-p : Previous Window\n;; C-c C-f C-f : Move Buffer to Next Window\n;; C-c C-f C-b : Move Buffer to Previous Window\n;; C-c C-f C-w : Swap Buffer with next window\n\n;; C-c C-o C-n : Open Notes"
+ initial-scratch-message ";; Happy Hacking!!\n\n;; C-c C-f C-s : Split Windows\n;; C-c C-f C-n : Next Window\n;; C-c C-f C-p : Previous Window\n;; C-c C-f C-f : Move Buffer to Next Window\n;; C-c C-f C-b : Move Buffer to Previous Window\n;; C-c C-f C-w : Swap Buffer with next window\n\n;; C-c o n : Open Notes\n;; C-c o w : Work Notes\n;; C-c o p : Project Notes"
  left-margin-width 1 right-margin-width 1     ; Add left and right margins
  select-enable-clipboard t       ; Merge system's and Emacs' clipboard
  cursor-type '(bar . 2)          ; set cursor type to bar
@@ -524,13 +524,15 @@
 (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
 
 ;; eshell
-(add-hook 'eshell-mode-hook
-          (lambda ()
-            (setenv "TERM" "xterm-256color")))
-(add-hook 'eshell-before-prompt-hook (setq xterm-color-preserve-properties t))
-(add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
-(setq eshell-output-filter-functions
-      (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
+;; (add-hook 'eshell-mode-hook
+;;           (lambda ()
+;;             (setenv "TERM" "xterm-256color")))
+;; (add-hook 'eshell-before-prompt-hook (setq xterm-color-preserve-properties t))
+;; (setq eshell-output-filter-functions ())
+;; (setq eshell-output-filter-functions
+;;       (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
+;; (setq eshell-preoutput-filter-functions ())
+;; (add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
 
 ;; Desktop
 (desktop-save-mode 1)
@@ -555,10 +557,12 @@
 ;; ==========================================
 (require 'pvik-core)
 
+;; for key bindings
+(pvik-keys-minor-mode 1)
+
 ;;;
 ;; Frames
 ;;;
-
 (require 'frames)
 ;; (pvik/split-windows)
 
