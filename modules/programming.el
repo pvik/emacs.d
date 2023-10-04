@@ -22,6 +22,8 @@
      (css "https://github.com/tree-sitter/tree-sitter-css")
      (elisp "https://github.com/Wilfred/tree-sitter-elisp")
      (go "https://github.com/tree-sitter/tree-sitter-go")
+	 (heex "https://github.com/phoenixframework/tree-sitter-heex")
+     (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
      (html "https://github.com/tree-sitter/tree-sitter-html")
      (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
      (json "https://github.com/tree-sitter/tree-sitter-json")
@@ -391,14 +393,35 @@
 ;; (require 'erlang-start)
 
 ;; elixir mode
-(use-package elixir-mode
+;; (use-package elixir-mode
+;;   :ensure t
+;;   :hook
+;;   (elixir-mode . lsp-deferred)
+;;   :preface
+;;   (defun elixir-save-hooks ()
+;; 	"Set up before-save hooks to formatbuffer."
+;; 	(add-hook 'before-save-hook 'elixir-format nil t))
+;;   :config
+;;   (add-hook 'elixir-mode-hook 'elixir-save-hooks))
+
+;; eglot
+(use-package eglot
+ :ensure nil
+ :config (add-to-list 'eglot-server-programs '(elixir-ts-mode "language_server.sh")))
+
+;; elixir mode
+(use-package elixir-ts-mode
   :ensure t
+  :hook
+  (elixir-mode . eglot-ensure)
   :preface
   (defun elixir-save-hooks ()
 	"Set up before-save hooks to formatbuffer."
 	(add-hook 'before-save-hook 'elixir-format nil t))
   :config
-  (add-hook 'elixir-mode-hook 'elixir-save-hooks))
+  (add-hook 'elixir-mode-hook 'elixir-save-hooks)
+  (major-mode-remap-alist
+  '((elixir-mode . elixir-ts-mode))))
 
 ;; clojure
 (use-package cider
