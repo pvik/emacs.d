@@ -101,9 +101,10 @@
   :defer t
   :diminish lsp-mode
   :commands (lsp lsp-deferred)
-  ;; (elixir-mode . lsp-deferred)
+  (elixir-mode . lsp-deferred)
+  (elixir-ts-mode . lsp-deferred)
   :init
-  ;; (add-to-list 'exec-path "/home/elric/Downloads/elixir-ls")
+  (add-to-list 'exec-path "/usr/lib/elixir-ls")
   :config
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   ;; rust
@@ -405,15 +406,20 @@
 ;;   (add-hook 'elixir-mode-hook 'elixir-save-hooks))
 
 ;; eglot
-(use-package eglot
- :ensure nil
- :config (add-to-list 'eglot-server-programs '(elixir-ts-mode "language_server.sh")))
+;; (use-package eglot
+;;  :ensure nil
+;;  :config
+;;  (add-to-list 'eglot-server-programs '(elixir-ts-mode "/usr/lib/elixir-ls/language_server.sh"))
+;;  (add-to-list 'eglot-server-programs '(elixir-mode "/usr/lib/elixir-ls/language_server.sh")))
 
 ;; elixir mode
 (use-package elixir-ts-mode
   :ensure t
   :hook
-  (elixir-mode . eglot-ensure)
+  ;; (elixir-mode . eglot-ensure)
+  ;; (elixir-ts-mode . eglot-ensure)
+  (elixir-mode . lsp-deferred)
+  (elixir-ts-mode . lsp-deferred)
   :preface
   (defun elixir-save-hooks ()
 	"Set up before-save hooks to formatbuffer."
