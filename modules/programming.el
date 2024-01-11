@@ -101,10 +101,10 @@
   :defer t
   :diminish lsp-mode
   :commands (lsp lsp-deferred)
-  (elixir-mode . lsp-deferred)
-  (elixir-ts-mode . lsp-deferred)
+  ;; (elixir-mode . lsp-deferred)
+  ;; (elixir-ts-mode . lsp-deferred)
   :init
-  (add-to-list 'exec-path "/usr/lib/elixir-ls")
+  (add-to-list 'exec-path "/usr/lib/elixir-ls/")
   :config
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   ;; rust
@@ -116,6 +116,7 @@
   ;; '(("gopls.completeUnimported" t t)
   ;;   ("gopls.staticcheck" t t)))
   :custom
+  (lsp-elixir-local-server-command "/usr/lib/elixir-ls/language_server.sh")
   ;; what to use when checking on-save. "check" is default, I prefer clippy
   (lsp-rust-analyzer-cargo-watch-command "clippy")
   (lsp-eldoc-render-all t)
