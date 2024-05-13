@@ -244,9 +244,9 @@
 (use-package pyvenv
   :ensure t
   :init
-  (setenv "WORKON_HOME" "~/.venvs/")
+  ;; (setenv "WORKON_HOME" ".venvs")
   :config
-  ;; (pyvenv-mode t)
+  (pyvenv-mode t)
 
   ;; Set correct Python interpreter
   (setq pyvenv-post-activate-hooks
