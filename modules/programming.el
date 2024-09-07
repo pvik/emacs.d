@@ -16,30 +16,36 @@
   :ensure t)
 
 ;; tree sitter
-(setq treesit-language-source-alist
-   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-     (cmake "https://github.com/uyha/tree-sitter-cmake")
-     (css "https://github.com/tree-sitter/tree-sitter-css")
-     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-     (go "https://github.com/tree-sitter/tree-sitter-go")
-	 (heex "https://github.com/phoenixframework/tree-sitter-heex")
-     (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
-     (html "https://github.com/tree-sitter/tree-sitter-html")
-     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-     (json "https://github.com/tree-sitter/tree-sitter-json")
-     (make "https://github.com/alemuller/tree-sitter-make")
-     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-     (python "https://github.com/tree-sitter/tree-sitter-python")
-     (toml "https://github.com/tree-sitter/tree-sitter-toml")
-     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+;; below not needed install tree-sitter-langs package
+;; (setq treesit-language-source-alist
+;;    '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+;;      (cmake "https://github.com/uyha/tree-sitter-cmake")
+;;      (css "https://github.com/tree-sitter/tree-sitter-css")
+;;      (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+;;      (go "https://github.com/tree-sitter/tree-sitter-go")
+;; 	 (heex "https://github.com/phoenixframework/tree-sitter-heex")
+;;      (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
+;;      (html "https://github.com/tree-sitter/tree-sitter-html")
+;;      (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+;;      (json "https://github.com/tree-sitter/tree-sitter-json")
+;;      (make "https://github.com/alemuller/tree-sitter-make")
+;;      (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+;;      (python "https://github.com/tree-sitter/tree-sitter-python")
+;;      (toml "https://github.com/tree-sitter/tree-sitter-toml")
+;;      (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+;;      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+;;      (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
-;; (use-package tree-sitter
-;;   :config
-;;   (require 'tree-sitter-langs)
-;;   (global-tree-sitter-mode)
-;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+(use-package tree-sitter-langs
+  :ensure t
+  )
+
+(use-package tree-sitter
+  :ensure t
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 ;; company mode - complete anything
 (use-package company
@@ -285,24 +291,26 @@
 
 ;; Rust Mode
 
-;; (use-package rust-mode
-;;   :ensure t
-;;   :mode "\\.rs\\'"
-;;   :after (lsp-mode)
-;;   :hook
-;;   (rust-mode . lsp-deferred)
-;;   :bind
-;;   (("C-c C-k". compile))
-;;   :config
-;;   (setq rust-format-on-save t)
-;;   (setq lsp-rust-server 'rust-analyzer)
-;;   (add-hook 'rust-mode-hook #'lsp)
-;;   ;; (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
-;;   ;; (setq racer-rust-src-path "~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src") ;; Rust source code PATH
-;;   ;; (add-hook 'rust-mode-hook #'racer-mode)
-;;   ;; (add-hook 'racer-mode-hook #'eldoc-mode)
-;;   ;; (add-hook 'racer-mode-hook #'company-mode)
-;;   )
+(use-package rust-mode
+  :ensure t
+  :mode "\\.rs\\'"
+  :after (lsp-mode)
+  :hook
+  (rust-mode . lsp-deferred)
+  (rust-mode . flycheck-mode)
+  :bind
+  (("C-c C-k". compile))
+  :config
+  (setq rust-format-on-save t)
+  (setq lsp-rust-server 'rust-analyzer)
+  (add-hook 'rust-mode-hook #'lsp)
+  ;; (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
+  ;; (setq racer-rust-src-path "~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src") ;; Rust source code PATH
+  ;; (add-hook 'rust-mode-hook #'racer-mode)
+  ;; (add-hook 'racer-mode-hook #'eldoc-mode)
+  ;; (add-hook 'racer-mode-hook #'company-mode)
+  )
+
 (use-package cargo
   :ensure t
   :defer t
@@ -325,40 +333,40 @@
 ;;   :config
 ;;   (add-hook 'racer-mode-hook #'eldoc-mode))
 
-(use-package rustic
-  :ensure
-  ;; :mode "\\.rs\\'"
-  ;; :after (lsp-mode)
-  :bind (:map rustic-mode-map
-              ("M-j" . lsp-ui-imenu)
-              ("M-?" . lsp-find-references)
-              ("C-c C-c l" . flycheck-list-errors)
-              ("C-c C-c a" . lsp-execute-code-action)
-              ("C-c C-c r" . lsp-rename)
-              ("C-c C-c q" . lsp-workspace-restart)
-              ("C-c C-c Q" . lsp-workspace-shutdown)
-              ("C-c C-c s" . lsp-rust-analyzer-status))
-  :custom 
-  (rustic-analyzer-command '("rustup" "run" "nightly" "rust-analyzer"))
-  :config
-  (setq rustic-lsp-client 'lsp-mode)
-  ;; uncomment for less flashiness
-  ;; (setq lsp-eldoc-hook nil)
-  ;; (setq lsp-enable-symbol-highlighting nil)
-  ;; (setq lsp-signature-auto-activate nil)
+;; (use-package rustic
+;;   :ensure
+;;   ;; :mode "\\.rs\\'"
+;;   ;; :after (lsp-mode)
+;;   :bind (:map rustic-mode-map
+;;               ("M-j" . lsp-ui-imenu)
+;;               ("M-?" . lsp-find-references)
+;;               ("C-c C-c l" . flycheck-list-errors)
+;;               ("C-c C-c a" . lsp-execute-code-action)
+;;               ("C-c C-c r" . lsp-rename)
+;;               ("C-c C-c q" . lsp-workspace-restart)
+;;               ("C-c C-c Q" . lsp-workspace-shutdown)
+;;               ("C-c C-c s" . lsp-rust-analyzer-status))
+;;   :custom 
+;;   (rustic-analyzer-command '("rustup" "run" "nightly" "rust-analyzer"))
+;;   :config
+;;   (setq rustic-lsp-client 'lsp-mode)
+;;   ;; uncomment for less flashiness
+;;   ;; (setq lsp-eldoc-hook nil)
+;;   ;; (setq lsp-enable-symbol-highlighting nil)
+;;   ;; (setq lsp-signature-auto-activate nil)
 
-  ;; comment to disable rustfmt on save
-  (setq rustic-format-on-save t)
-  (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
+;;   ;; comment to disable rustfmt on save
+;;   (setq rustic-format-on-save t)
+;;   (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
 
-(defun rk/rustic-mode-hook ()
-  ;; so that run C-c C-c C-r works without having to confirm, but don't try to
-  ;; save rust buffers that are not file visiting. Once
-  ;; https://github.com/brotzeit/rustic/issues/253 has been resolved this should
-  ;; no longer be necessary.
-  (when buffer-file-name
-    (setq-local buffer-save-without-query t))
-  (add-hook 'before-save-hook 'lsp-format-buffer nil t))
+;; (defun rk/rustic-mode-hook ()
+;;   ;; so that run C-c C-c C-r works without having to confirm, but don't try to
+;;   ;; save rust buffers that are not file visiting. Once
+;;   ;; https://github.com/brotzeit/rustic/issues/253 has been resolved this should
+;;   ;; no longer be necessary.
+;;   (when buffer-file-name
+;;     (setq-local buffer-save-without-query t))
+;;   (add-hook 'before-save-hook 'lsp-format-buffer nil t))
 
 ;;;
 ;; lisp-y
@@ -473,6 +481,11 @@
   (add-hook 'elixir-mode-hook 'elixir-save-hooks)
   (major-mode-remap-alist
   '((elixir-mode . elixir-ts-mode))))
+
+;; gleam
+;;  run M-x gleam-ts-install-grammar
+(use-package gleam-ts-mode
+  :mode (rx ".gleam" eos))
 
 ;; clojure
 (use-package cider
