@@ -171,6 +171,7 @@
               ;; ("s-p" . projectile-command-map)
               ("C-c p" . projectile-command-map))
   :config
+  (setq projectile-project-search-path '("~/common-lisp/" "~/Work/"))
   ;; ignoring specific buffers by name
   (setq projectile-globally-ignored-buffers
 		'("*scratch*"
@@ -390,6 +391,11 @@
 
 (use-package exec-path-from-shell
   :ensure t)
+
+(use-package neotree
+  :ensure t
+  :config
+  (global-set-key (kbd "C-c n") #'neotree-toggle))
 
 ;; org-mode
 ;; ========
