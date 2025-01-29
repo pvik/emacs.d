@@ -541,7 +541,7 @@
 
 ;; Default font
 
-(setq default-font "FiraCode")
+(setq default-font "SourceCodePro")
 
 ;; fonts
 (set-frame-font default-font)
