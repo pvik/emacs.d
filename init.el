@@ -254,19 +254,17 @@
 (use-package doom-themes
   :ensure t
   :preface
-  (defun my-init-theme (&optional _frame)
-	)
+  ;; (defun my-init-theme (&optional _frame)
+  ;; 	)
   
-  (defun my-reload-theme-in-daemon (frame)
-	(when (or (daemonp) (not (display-graphic-p)))
-      (with-selected-frame frame
-		(run-with-timer 0.1 nil #'my-init-theme))))
+  ;; (defun my-reload-theme-in-daemon (frame)
+  ;; 	(when (or (daemonp) (not (display-graphic-p)))
+  ;;     (with-selected-frame frame
+  ;; 		(run-with-timer 0.1 nil #'my-init-theme))))
   :config
   (setq doom-themes-enable-bold nil  ; if nil, bold is universally disabled
 		doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (if (display-graphic-p)
-	  (load-theme 'doom-one t) ;; GUI Theme
-	  (load-theme 'doom-dracula t))
+  
   (doom-themes-visual-bell-config) ;; Enable flashing mode-line on errors
   (doom-themes-neotree-config) ;; Enable custom neotree theme (all-the-icons must be installed!)
   (doom-themes-org-config) ;; Corrects (and improves) org-mode's native fontification.
@@ -547,8 +545,12 @@
 (setq desktop-path '("~/.emacs.d/cache/"))
 (desktop-read)
 
-;; Default font
+;; Theme
+(if (or (daemonp) (display-graphic-p))
+	  (load-theme 'doom-one t) ;; GUI Theme
+	  (load-theme 'doom-dracula t))
 
+;; Default font
 (setq default-font "SourceCodePro")
 
 ;; fonts
