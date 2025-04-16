@@ -197,7 +197,9 @@
 ;;;
 
 ;; kill this buffer key bind
-(global-set-key (kbd "C-x C-k .") #'kill-this-buffer)
+(global-set-key (kbd "C-x C-k .") (lambda ()
+                              (interactive)
+                              (kill-buffer (buffer-name))))
 
 ;; tabs, spaces & indents
 
@@ -557,7 +559,7 @@
 	  (load-theme 'doom-dracula t))
 
 ;; Default font
-(setq default-font "SourceCodePro")
+(setq default-font (if pvik-default-font pvik-default-font "SourceCodePro"))
 
 ;; fonts
 (set-frame-font default-font)
@@ -581,6 +583,13 @@
 ;;;
 (require 'frames)
 ;; (pvik/split-windows)
+
+;;;
+;; osx
+;;;
+(when pvik-is-osx
+  (require 'osx))
+
 
 (use-package envrc
   :ensure t)

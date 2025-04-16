@@ -7,10 +7,16 @@
 
 ;;; Code:
 
+(defvar pvik-default-font "Hack")
+
+(defvar pvik-is-osx nil)
+
 (defvar pvik-default-notes-file "~/notes.org")
 (defvar pvik-default-work-notes-file "~/work.org")
 
-(setq freenode-password "your password")
+(defvar freenode-password "your password")
+(defvar pvik-anthropic-token "...")
+(defvar pvik-openai-token "...")
 
 (defvar pvik-line-spacing 4)
 
