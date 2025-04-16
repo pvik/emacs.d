@@ -590,6 +590,10 @@
 (when pvik-is-osx
   (require 'osx))
 
+;;;
+;; LLM
+;;;
+(require 'llm)
 
 (use-package envrc
   :ensure t)
