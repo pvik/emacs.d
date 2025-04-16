@@ -1,4 +1,4 @@
-;;; programming.el --- Define and configure packages for programming modes
+;;; programming.el --- Define and configure packages for programming modes -*- lexical-binding: t -*-
 
 ;;; Commentary:
 ;; Configuration for all Programming languages used
@@ -50,10 +50,12 @@
 ;; company mode - complete anything
 (use-package company
   :ensure t
+  :custom
+  (company-selection-wrap-around t)
   :config
   (add-hook 'after-init-hook 'global-company-mode)
   (setq lsp-completion-provider :capf)
-  (setq company-minimum-prefix-length 1
+  (setq company-minimum-prefix-length 2
 		company-idle-delay 0.0)) ;; default is 0.2
 (use-package company-web
   :ensure t)
@@ -112,6 +114,7 @@
   :init
   (add-to-list 'exec-path "/usr/lib/elixir-ls/")
   :config
+  ;; (add-to-list 'lsp-language-id-configuration '(python-mode . "python"))
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   ;; rust
   (setq rustic-lsp-server 'rust-analyzer)
@@ -126,7 +129,7 @@
   (lsp-headerline-breadcrumb-enable t)
   (lsp-headerline-breadcrumb-segments '(project file symbols))
   (lsp-lens-enable nil)
-  (lsp-disabled-clients '((python-mode . pyls)))
+  ;; (lsp-disabled-clients '((python-mode . pyls)))
   (lsp-elixir-local-server-command "/usr/lib/elixir-ls/language_server.sh")
   ;; what to use when checking on-save. "check" is default, I prefer clippy
   (lsp-rust-analyzer-cargo-watch-command "clippy")
@@ -242,45 +245,17 @@
   :ensure t)
 
 ;; Python
+;; (use-package elpy
+;;   :ensure t
+;;   :init
+;;   (elpy-enable))
+
 (use-package lsp-pyright
-  :init
-  (setq lsp-pyright-multi-root nil)
-  :hook
-  (python-mode . (lambda ()
-                   (require 'lsp-pyright)
-                   (lsp-deferred))))
-(use-package pyvenv
   :ensure t
-  :init
-  ;; (setenv "WORKON_HOME" ".venvs")
-  :config
-  (pyvenv-mode t)
-
-  ;; Set correct Python interpreter
-  (setq pyvenv-post-activate-hooks
-        (list (lambda ()
-                (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/python")))))
-  (setq pyvenv-post-deactivate-hooks
-        (list (lambda ()
-                (setq python-shell-interpreter "python3")))))
-
-(use-package blacken
-  :init
-  (setq-default blacken-fast-unsafe t)
-  (setq-default blacken-line-length 80))
-
-(use-package python-mode
-  :hook
-  (python-mode . pyvenv-mode)
-  (python-mode . flycheck-mode)
-  (python-mode . company-mode)
-  (python-mode . blacken-mode)
-  (python-mode . yas-minor-mode)
-  :custom
-  ;; NOTE: Set these if Python 3 is called "python3" on your system!
-  (python-shell-interpreter "python3")
-  :config
-  )
+  :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp-deferred))))  ; or lsp
 
 ;; C/C++
 ;; make sure ccls package is installed on host OS
@@ -449,16 +424,16 @@
 ;; (require 'erlang-start)
 
 ;; elixir mode
-;; (use-package elixir-mode
-;;   :ensure t
-;;   :hook
-;;   (elixir-mode . lsp-deferred)
-;;   :preface
-;;   (defun elixir-save-hooks ()
-;; 	"Set up before-save hooks to formatbuffer."
-;; 	(add-hook 'before-save-hook 'elixir-format nil t))
-;;   :config
-;;   (add-hook 'elixir-mode-hook 'elixir-save-hooks))
+(use-package elixir-mode
+  :ensure t
+  :hook
+  (elixir-mode . lsp-deferred)
+  :preface
+  (defun elixir-save-hooks ()
+	"Set up before-save hooks to formatbuffer."
+	(add-hook 'before-save-hook 'elixir-format nil t))
+  :config
+  (add-hook 'elixir-mode-hook 'elixir-save-hooks))
 
 ;; eglot
 ;; (use-package eglot

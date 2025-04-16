@@ -1,4 +1,4 @@
-;; init.el --- Summary
+;;; init.el --- Summary -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Emacs init file
 
@@ -37,7 +37,7 @@
 
 (setq-default
  inhibit-startup-screen t
- initial-scratch-message ";; Happy Hacking!!\n\n;; C-c C-f C-s : Split Windows\n;; C-c C-f C-n : Next Window\n;; C-c C-f C-p : Previous Window\n;; C-c C-f C-f : Move Buffer to Next Window\n;; C-c C-f C-b : Move Buffer to Previous Window\n;; C-c C-f C-w : Swap Buffer with next window\n\n;; C-c o n : Open Notes\n;; C-c o w : Work Notes\n;; C-c o p : Project Notes"
+ initial-scratch-message ";;-*- lexical-binding: t -*-\n\n;; Happy Hacking!!\n\n;; C-c C-f C-s : Split Windows\n;; C-c C-f C-n : Next Window\n;; C-c C-f C-p : Previous Window\n;; C-c C-f C-f : Move Buffer to Next Window\n;; C-c C-f C-b : Move Buffer to Previous Window\n;; C-c C-f C-w : Swap Buffer with next window\n\n;; C-c o n : Open Notes\n;; C-c o w : Work Notes\n;; C-c o p : Project Notes"
  left-margin-width 1 right-margin-width 1     ; Add left and right margins
  select-enable-clipboard t       ; Merge system's and Emacs' clipboard
  cursor-type '(bar . 2)          ; set cursor type to bar
@@ -90,17 +90,23 @@
 
 ;; Bootstrap straight.el
 (defvar bootstrap-version)
+(setq straight-repository-branch "develop")
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
          'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
+(setq package-enable-at-startup nil)
 
 ;; Always use straight to install on systems other than Linux
 (setq straight-use-package-by-default (not (eq system-type 'gnu/linux)))
@@ -575,6 +581,11 @@
 ;;;
 (require 'frames)
 ;; (pvik/split-windows)
+
+(use-package envrc
+  :ensure t)
+(envrc-global-mode)
+
 
 (setq gc-cons-threshold gc-cons-threshold-orig)
 
