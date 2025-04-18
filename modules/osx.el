@@ -14,7 +14,14 @@
   (interactive "^")
   (insert (shell-command-to-string "pbpaste")))
 
-(global-set-key (kbd "s-v")  #'pvik/interprogram-paste-function)
+(when (eq system-type 'darwin)
+  (progn
+	(setq mac-option-key-is-meta nil
+          mac-command-key-is-meta t
+          mac-command-modifier 'meta
+          mac-option-modifier 'none)
+	
+	(global-set-key (kbd "s-v")  #'pvik/interprogram-paste-function)))
 
 (provide 'osx)
 
