@@ -37,7 +37,7 @@
 
 (setq-default
  inhibit-startup-screen t
- initial-scratch-message ";;-*- lexical-binding: t -*-\n\n;; Happy Hacking!!\n\n;; C-c C-f C-s : Split Windows\n;; C-c C-f C-n : Next Window\n;; C-c C-f C-p : Previous Window\n;; C-c C-f C-f : Move Buffer to Next Window\n;; C-c C-f C-b : Move Buffer to Previous Window\n;; C-c C-f C-w : Swap Buffer with next window\n\n;; C-c o n : Open Notes\n;; C-c o w : Work Notes\n;; C-c o p : Project Notes"
+ initial-scratch-message ";;-*- lexical-binding: t -*-\n\n;; Happy Hacking!!\n\n;; C-c C-f C-s : Split Windows\n;; C-c C-f C-n : Next Window\n;; C-c C-f C-p : Previous Window\n;; C-c C-f C-f : Move Buffer to Next Window\n;; C-c C-f C-b : Move Buffer to Previous Window\n;; C-c C-f C-w : Swap Buffer with next window\n\n;; C-c o n : Open Notes\n;; C-c o w : Work Notes\n;; C-c o p : Project Notes\n\n;; -----\n"
  left-margin-width 1 right-margin-width 1     ; Add left and right margins
  select-enable-clipboard t       ; Merge system's and Emacs' clipboard
  cursor-type '(bar . 2)          ; set cursor type to bar
@@ -403,10 +403,32 @@
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
-(use-package neotree
+;; (use-package neotree
+;;   :ensure t
+;;   :config
+;;   (global-set-key (kbd "C-c n") #'neotree-toggle))
+
+(use-package treemacs
   :ensure t
+  :defer t
+  :init
   :config
-  (global-set-key (kbd "C-c n") #'neotree-toggle))
+  (setq
+   treemacs-project-follow-mode t)
+  :bind
+  (:map global-map
+        ("C-c t"       . treemacs-select-window)
+        ;; ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-c n"   . treemacs)
+        ;; ("C-x t d"   . treemacs-select-directory)
+        ;; ("C-x t B"   . treemacs-bookmark)
+        ;; ("C-x t C-t" . treemacs-find-file)
+        ;; ("C-x t M-t" . treemacs-find-tag)
+		))
+
+(use-package treemacs-projectile
+  :ensure t
+  :defer t)
 
 ;; org-mode
 ;; ========
