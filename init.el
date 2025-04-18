@@ -413,13 +413,12 @@
   :defer t
   :init
   :config
-  (setq
-   treemacs-project-follow-mode t)
+  (treemacs-project-follow-mode)
   :bind
   (:map global-map
-        ("C-c t"       . treemacs-select-window)
+        ("C-c n t"       . treemacs-select-window)
         ;; ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-c n"   . treemacs)
+        ("C-c n n"   . treemacs)
         ;; ("C-x t d"   . treemacs-select-directory)
         ;; ("C-x t B"   . treemacs-bookmark)
         ;; ("C-x t C-t" . treemacs-find-file)
@@ -428,7 +427,10 @@
 
 (use-package treemacs-projectile
   :ensure t
-  :defer t)
+  :defer t
+  :bind
+  (:map global-map
+        ("C-c n p"   . treemacs-projectile)))
 
 ;; org-mode
 ;; ========
