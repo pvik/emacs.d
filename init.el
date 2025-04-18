@@ -33,8 +33,6 @@
 (tooltip-mode    -1)
 (menu-bar-mode   -1)
 
-(setq alert-default-style 'libnotify)
-
 (setq-default
  inhibit-startup-screen t
  initial-scratch-message ";;-*- lexical-binding: t -*-\n\n;; Happy Hacking!!\n\n;; C-c C-f C-s : Split Windows\n;; C-c C-f C-n : Next Window\n;; C-c C-f C-p : Previous Window\n;; C-c C-f C-f : Move Buffer to Next Window\n;; C-c C-f C-b : Move Buffer to Previous Window\n;; C-c C-f C-w : Swap Buffer with next window\n\n;; C-c o n : Open Notes\n;; C-c o w : Work Notes\n;; C-c o p : Project Notes\n\n;; -----\n"
@@ -614,8 +612,11 @@
 ;;;
 ;; osx
 ;;;
-(when pvik-is-osx
-  (require 'osx))
+(if pvik-is-osx
+	(progn (require 'osx))
+
+  ;; non-osx stuff
+  (progn (setq alert-default-style 'libnotify)))
 
 ;;;
 ;; LLM
