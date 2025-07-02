@@ -507,11 +507,12 @@
   :init
   (add-hook 'cider-mode-hook 'eldoc-mode)
   :config
-  (setq nrepl-hide-special-buffers t)
-  (setq nrepl-log-messages t)
-  (setq cider-repl-use-pretty-printing t)
-  (setq cider-boot-parameters "repl -s watch refresh")
-  (setq nrepl-repl-buffer-name-template "*cider-repl (%r%S)"))
+  ;; (setq nrepl-hide-special-buffers t)
+  ;; (setq nrepl-log-messages t)
+  ;; (setq cider-repl-use-pretty-printing t)
+  ;; (setq cider-boot-parameters "repl -s watch refresh")
+  ;; (setq nrepl-repl-buffer-name-template "*cider-repl (%r%S)")
+  )
 (use-package helm-cider
   :ensure t
   :after cider)
@@ -541,6 +542,7 @@
   (add-hook 'clojure-mode-hook #'projectile-mode)
   (add-hook 'clojure-mode-hook #'hl-todo-mode)
   (add-hook 'clojure-mode-hook #'outline-minor-mode)
+  (add-hook 'clojure-mode-hook #'cider-mode)
   (add-hook 'clojure-mode-hook (lambda ()
 								 (clj-refactor-mode 1)
 								 (helm-cider-mode 1)
@@ -579,6 +581,55 @@
    :host github
    :repo "serialdev/ijanet-mode"
    ))
+
+;; OCaml
+;; Major mode for OCaml programming
+(use-package tuareg
+  :ensure t
+  :mode (("\\.ocamlinit\\'" . tuareg-mode)))
+
+;; Major mode for editing Dune project files
+(use-package dune
+  :ensure t)
+
+;; Merlin provides advanced IDE features
+;; requires:
+;;   opam install merlin
+(use-package merlin
+  :ensure t
+  :config
+  (add-hook 'tuareg-mode-hook #'merlin-mode)
+  (add-hook 'merlin-mode-hook #'company-mode)
+  ;; we're using flycheck instead
+  (setq merlin-error-after-save nil))
+
+(use-package merlin-eldoc
+  :ensure t
+  :hook ((tuareg-mode) . merlin-eldoc-setup))
+
+;; This uses Merlin internally
+(use-package flycheck-ocaml
+  :ensure t
+  :config
+  (flycheck-ocaml-setup))
+
+;; utop configuration
+;; requires:
+;;   opam install utop
+(use-package utop
+  :ensure t
+  :config
+  (add-hook 'tuareg-mode-hook #'utop-minor-mode))
+
+;; ocaml lsp-server
+;; requires:
+;;   opam install ocaml-lsp-server ocamlformat
+(use-package ocaml-eglot
+  :ensure t
+  :after tuareg
+  :hook
+  (tuareg-mode . ocaml-eglot)
+  (ocaml-eglot . eglot-ensure))
 
 (provide 'programming)
 
