@@ -86,34 +86,34 @@
 ;; straight.el
 ;;;
 
-;; Bootstrap straight.el
-(defvar bootstrap-version)
-(setq straight-repository-branch "develop")
-(let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el"
-        (or (bound-and-true-p straight-base-dir)
-            user-emacs-directory)))
-      (bootstrap-version 7))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+;; ;; Bootstrap straight.el
+;; (defvar bootstrap-version)
+;; (setq straight-repository-branch "develop")
+;; (let ((bootstrap-file
+;;        (expand-file-name
+;;         "straight/repos/straight.el/bootstrap.el"
+;;         (or (bound-and-true-p straight-base-dir)
+;;             user-emacs-directory)))
+;;       (bootstrap-version 7))
+;;   (unless (file-exists-p bootstrap-file)
+;;     (with-current-buffer
+;;         (url-retrieve-synchronously
+;;          "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+;;          'silent 'inhibit-cookies)
+;;       (goto-char (point-max))
+;;       (eval-print-last-sexp)))
+;;   (load bootstrap-file nil 'nomessage))
 
-(setq package-enable-at-startup nil)
+;; (setq package-enable-at-startup nil)
 
-;; Always use straight to install on systems other than Linux
-(setq straight-use-package-by-default (not (eq system-type 'gnu/linux)))
+;; ;; Always use straight to install on systems other than Linux
+;; (setq straight-use-package-by-default (not (eq system-type 'gnu/linux)))
 
-;; Use straight.el for use-package expressions
-(straight-use-package 'use-package)
+;; ;; Use straight.el for use-package expressions
+;; (straight-use-package 'use-package)
 
-;; Load the helper package for commands like `straight-x-clean-unused-repos'
-(require 'straight-x)
+;; ;; Load the helper package for commands like `straight-x-clean-unused-repos'
+;; (require 'straight-x)
 
 ;;;
 ;; Keep Emacs.d clean

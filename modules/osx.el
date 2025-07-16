@@ -16,7 +16,7 @@
 
 (when (eq system-type 'darwin)
   (progn
-	(require 'mac-notifications)
+	;; (require 'mac-notifications)
 	
 	(setq mac-option-key-is-meta t
           mac-command-key-is-meta nil

@@ -575,12 +575,12 @@
   (add-hook 'janet-mode-hook #'hl-todo-mode)
   (add-hook 'janet-mode-hook #'outline-minor-mode))
 
-(straight-use-package
- '(ijanet
-   :type git
-   :host github
-   :repo "serialdev/ijanet-mode"
-   ))
+;; (straight-use-package
+;;  '(ijanet
+;;    :type git
+;;    :host github
+;;    :repo "serialdev/ijanet-mode"
+;;    ))
 
 ;; OCaml
 ;; Major mode for OCaml programming
