@@ -557,8 +557,7 @@
 									;; (pdf-occur-global-minor-mode -1)
 									;; (tex-pdf-mode -1)
 									))
-  (require 'flycheck-clj-kondo)
-  )
+  (require 'flycheck-clj-kondo))
 
 
 ;; Janet
