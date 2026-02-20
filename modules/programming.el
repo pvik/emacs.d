@@ -635,6 +635,16 @@
   (tuareg-mode . ocaml-eglot)
   (ocaml-eglot . eglot-ensure))
 
+;;; Frontend / Javascript
+
+(use-package typescript-mode
+  :ensure t)
+
+(use-package svelte-mode
+  :ensure t)
+
 (provide 'programming)
+
+
 
 ;;; programming.el ends here
