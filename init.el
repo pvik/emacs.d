@@ -82,6 +82,27 @@
 (assq-delete-all 'org package--builtins)
 (assq-delete-all 'org package--builtin-versions)
 
+;; org-mode
+;; ========
+
+(use-package org
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook #'display-line-numbers-mode)
+  ;; (setq org-directory (expand-file-name "~/org"))
+  (setq org-default-notes-file (expand-file-name pvik-default-notes-file))
+  ;; (setq org-agenda-files '("~/org" "~/www/org" "~/www/_org"))
+  ;; hide leading stars
+  (setq org-startup-indented t
+		org-hide-leading-stars t)
+  (setq org-adapt-indentation t)
+  (setq org-startup-with-inline-images t)
+  (org-babel-do-load-languages
+    'org-babel-load-languages
+    '(;; (d2 . t)
+      (mermaid . t)))
+  )
+
 ;;;
 ;; straight.el
 ;;;
@@ -430,35 +451,16 @@
   (:map global-map
         ("C-c n p"   . treemacs-projectile)))
 
-;; org-mode
-;; ========
-
-(use-package org
-  :ensure t
-  :config
-  (add-hook 'org-mode-hook #'display-line-numbers-mode)
-  ;; (setq org-directory (expand-file-name "~/org"))
-  (setq org-default-notes-file (expand-file-name pvik-default-notes-file))
-  ;; (setq org-agenda-files '("~/org" "~/www/org" "~/www/_org"))
-  ;; hide leading stars
-  (setq org-startup-indented t
-		org-hide-leading-stars t)
-  (setq org-adapt-indentation t)
-  (setq org-startup-with-inline-images t)
-  (org-babel-do-load-languages
-    'org-babel-load-languages
-    '((d2 . t)
-      (mermaid . t))))
 
 (use-package ob-mermaid
   :ensure t
   :config
   (setq ob-mermaid-cli-path "/usr/bin/mmdc"))
 
-(use-package ob-d2
-  :ensure t
-  :config
-  (setq ob-d2-cli-path "/usr/bin/d2"))
+;; (use-package ob-d2
+;;   :ensure t
+;;   :config
+;;   (setq ob-d2-cli-path "/usr/bin/d2"))
 
 ;; magit
 (use-package magit
