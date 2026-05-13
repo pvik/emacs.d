@@ -586,6 +586,33 @@
 ;;    :repo "serialdev/ijanet-mode"
 ;;    ))
 
+;; Fennel
+(use-package fennel-mode
+  :ensure t
+  :after (smartparens rainbow-delimiters aggressive-indent projectile)
+  :config
+  ;;:init
+  (add-hook 'fennel-mode-hook 'turn-on-smartparens-strict-mode)
+  (add-hook 'fennel-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'fennel-mode-hook #'aggressive-indent-mode)
+  (add-hook 'fennel-mode-hook #'show-paren-mode)
+  (add-hook 'fennel-mode-hook #'projectile-mode)
+  (add-hook 'fennel-mode-hook #'hl-todo-mode)
+  (add-hook 'fennel-mode-hook #'outline-minor-mode))
+
+;; Lua
+(use-package lua-mode
+  :ensure t
+  :config
+  ;;:init
+  (add-hook 'lua-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'lua-mode-hook #'aggressive-indent-mode)
+  (add-hook 'lua-mode-hook #'show-paren-mode)
+  (add-hook 'lua-mode-hook #'projectile-mode)
+  (add-hook 'lua-mode-hook #'hl-todo-mode)
+  (add-hook 'lua-mode-hook #'outline-minor-mode))
+
+
 ;; OCaml
 ;; Major mode for OCaml programming
 (use-package tuareg
